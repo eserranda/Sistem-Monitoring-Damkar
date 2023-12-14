@@ -37,6 +37,8 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/node-waves/node-waves.css" />
 
+
+    @stack('css')
     <!-- Page CSS -->
 
     <!-- Helpers -->

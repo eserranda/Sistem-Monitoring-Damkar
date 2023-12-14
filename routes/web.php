@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/dashboard', function () {
+    return view('dashboard.index');
+});
 Route::get('/', function () {
     return view('layouts.index');
+});
+
+Route::get('/monitoring', function () {
+    return view('monitoring.index');
+});
+Route::get('/sensor', function () {
+    return view('sensor.index');
 });
