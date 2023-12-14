@@ -17,7 +17,7 @@
             </li>
             <li class="menu-item">
                 <a href="/sensor" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-app-window"></i>
+                    <i class="menu-icon tf-icons ti ti-server-bolt"></i>
                     <div data-i18n="Data Sensor">Data Sensor</div>
                 </a>
             </li>

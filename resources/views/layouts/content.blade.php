@@ -4,7 +4,5 @@
      @yield('title')
 
      @yield('content')
-
-
  </div>
  <!--/ Content -->
