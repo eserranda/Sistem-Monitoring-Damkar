@@ -2,8 +2,14 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <h>Hello</h>
+        <div class="card-header header-elements">
+            <span class="me-2">Data Sensor</span>
+
+            <div class="card-header-elements ms-auto">
+                <a href="/add_sensor" class="btn -bottom-3 btn-primary">
+                    <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add
+                </a>
+            </div>
         </div>
 
         <div class="card-body">
@@ -14,8 +20,8 @@
                         <tr>
                             <th>No</th>
                             <th>Kode Sensor</th>
+                            <th>Latitude</th>
                             <th>Longitude</th>
-                            <th>Langitude</th>
                             <th>Tempat Sensor</th>
                             <th>Alamat</th>
                             <th>Maps</th>

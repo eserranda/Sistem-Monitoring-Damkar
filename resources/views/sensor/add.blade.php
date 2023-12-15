@@ -34,8 +34,8 @@
                             </div>
 
                             <div class="mb-3 col-lg-2 d-flex align-items-center mb-0">
-                                <button class="btn btn-info mt-4">
-                                    <i class="ti ti-map-2 text-black"></i>
+                                <button class="btn btn-info mt-4 btn-sm">
+                                    <i class="ti ti-map-2 ti-sm text-black"></i>
                                 </button>
                             </div>
                         </div>
@@ -53,15 +53,15 @@
 
                         <div class="mb-3">
                             <label class="form-label" for="formValidationBio">Alamat</label>
-                            <textarea class="form-control" id=" " name=" " rows="2" required></textarea>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="2" required></textarea>
                             <div class="valid-feedback">Looks good!</div>
                             <div class="invalid-feedback"> </div>
                         </div>
 
-
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
+                                <a href="/sensor"class="btn btn-warning">Back</a>
                             </div>
                         </div>
                     </form>

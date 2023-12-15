@@ -24,8 +24,8 @@
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/fonts/fontawesome.css" />
-    {{-- <link rel="stylesheet" href="{{ asset('assets') }}/vendor/fonts/tabler-icons.css" /> --}}
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <link rel="stylesheet" href="{{ asset('assets') }}/vendor/fonts/tabler-icons.css" />
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" /> --}}
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/fonts/flag-icons.css" />
 
     <!-- Core CSS -->
@@ -37,6 +37,7 @@
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/node-waves/node-waves.css" />
+    {{-- <link rel="stylesheet" href="{{ asset('assets') }}z/vendor/libs/typeahead-js/typeahead.css" /> --}}
 
 
     @stack('css')
