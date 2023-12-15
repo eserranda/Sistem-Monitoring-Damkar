@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DataSensorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,4 +30,13 @@ Route::get('/sensor', function () {
 });
 Route::get('/add_sensor', function () {
     return view('sensor.add');
+});
+
+Route::get('/add_sensor', function () {
+    return view('sensor.add');
+});
+
+Route::controller(DataSensorController::class)->group(function () {
+    Route::get('/sensor', 'index')->name("sensor.index");
+    Route::POST('/sensor_store', 'store')->name("sensor.store");
 });

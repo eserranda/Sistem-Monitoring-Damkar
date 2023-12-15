@@ -7,7 +7,7 @@
     <!-- Basic Bootstrap Table -->
     <div class="row">
         <!-- Basic -->
-        <div class="col-8">
+        <div class="col-lg-8">
             <div class="card mb-4">
                 <div class="card-body">
                     <div class="leaflet-map" id="basicMap"></div>

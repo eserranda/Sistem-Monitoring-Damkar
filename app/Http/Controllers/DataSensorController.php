@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\DataSensor;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class DataSensorController extends Controller
@@ -12,7 +13,7 @@ class DataSensorController extends Controller
      */
     public function index()
     {
-        //
+        return view('sensor.index');
     }
 
     /**
@@ -28,7 +29,20 @@ class DataSensorController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'kode_sensor' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'tempat_sensor' => 'required',
+            'alamat' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        DataSensor::created($request->all());
+        return response()->json(['success' => true], 201);
     }
 
     /**
