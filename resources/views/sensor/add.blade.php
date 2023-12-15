@@ -59,8 +59,8 @@
                             <label class="form-label" for="form-repeater-1-3">Tempat Sensor</label>
                             <select class="form-select" id="tempat_sensor" name="tempat_sensor" required>
                                 <option value="">- Pilih Tempat -</option>
-                                <option value="Male">Rumah</option>
-                                <option value="Female">Gedung</option>
+                                <option value="Rumah">Rumah</option>
+                                <option value="Gedung">Gedung</option>
                             </select>
                             <div class="invalid-feedback"> </div>
                         </div>
@@ -84,7 +84,7 @@
 
         <div class="col-md-7">
             <div class="card sticky-top">
-                <div id="map" style="height: 400px;" class="m-1"></div>
+                <div id="map" class="m-1 leaflet-map"></div>
             </div>
         </div>
     </div>
@@ -124,9 +124,9 @@
                         },
                     }).then(response => response.json());
 
-                    if (!response.status) {
+                    if (!response.success) {
                         handleValidationErrors(response.errors);
-                    } else {
+                    } else if (response.success) {
                         console.log(response);
                         const invalidInputs = document.querySelectorAll('.is-invalid');
                         invalidInputs.forEach(invalidInput => {
@@ -138,6 +138,7 @@
                                 errorNextSibling.textContent = '';
                             }
                         });
+                        window.location.href = '/sensor';
                     }
                 } catch (error) {
                     console.error('Terjadi kesalahan:', error);

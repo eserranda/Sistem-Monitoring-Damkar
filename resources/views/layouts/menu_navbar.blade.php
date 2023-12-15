@@ -11,13 +11,14 @@
             </li>
             <li class="menu-item">
                 <a href="/monitoring" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-app-window"></i>
+                    {{-- <i class="menu-icon tf-icons ti ti-app-window"></i> --}}
+                    <i class="menu-icon tf-icons ti ti-screen-share"></i>
                     <div data-i18n="Monitoring">Monitoring</div>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="/sensor" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-server-bolt"></i>
+                    <i class="menu-icon tf-icons ti ti-list-check"></i>
                     <div data-i18n="Data Sensor">Data Sensor</div>
                 </a>
             </li>

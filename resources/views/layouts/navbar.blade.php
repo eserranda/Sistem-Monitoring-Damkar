@@ -2,9 +2,9 @@
    <nav class="layout-navbar navbar navbar-expand-xl align-items-center bg-navbar-theme" id="layout-navbar">
        <div class="container-xxl">
            <div class="navbar-brand app-brand demo d-none d-xl-flex py-0 me-4">
-               <a href="/" class="app-brand-link gap-2">
+               <a href="/" class="app-brand-link ">
                    <span class="app-brand-logo demo">
-                       <svg width="32" height="22" viewBox="0 0 32 22" fill="none"
+                       {{-- <svg width="32" height="22" viewBox="0 0 32 22" fill="none"
                            xmlns="http://www.w3.org/2000/svg">
                            <path fill-rule="evenodd" clip-rule="evenodd"
                                d="M0.00172773 0V6.85398C0.00172773 6.85398 -0.133178 9.01207 1.98092 10.8388L13.6912 21.9964L19.7809 21.9181L18.8042 9.88248L16.4951 7.17289L9.23799 0H0.00172773Z"
@@ -16,6 +16,14 @@
                            <path fill-rule="evenodd" clip-rule="evenodd"
                                d="M7.77295 16.3566L23.6563 0H32V6.88383C32 6.88383 31.8262 9.17836 30.6591 10.4057L19.7824 22H13.6938L7.77295 16.3566Z"
                                fill="#7367F0" />
+                       </svg> --}}
+                       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-flame-off"
+                           width="32" height="22" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                           fill="none" stroke-linecap="round" stroke-linejoin="round">
+                           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                           <path
+                               d="M8.973 8.974c-.335 .378 -.67 .716 -.973 1.026c-1.226 1.26 -2 3.24 -2 5a6 6 0 0 0 11.472 2.466m.383 -3.597c-.32 -1.409 -1.122 -3.045 -1.855 -3.869c-.281 .472 -.543 .87 -.79 1.202m-2.358 -2.35c-.068 -2.157 -1.182 -4.184 -1.852 -4.852c0 .968 -.18 1.801 -.465 2.527" />
+                           <path d="M3 3l18 18" />
                        </svg>
                    </span>
                    <span class="app-brand-text demo menu-text fw-bold">Damkar</span>

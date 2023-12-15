@@ -13,7 +13,8 @@ class DataSensorController extends Controller
      */
     public function index()
     {
-        return view('sensor.index');
+        $data = DataSensor::all();
+        return view('sensor.index', compact('data'));
     }
 
     /**
@@ -30,18 +31,18 @@ class DataSensorController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'kode_sensor' => 'required',
-            'latitude' => 'required',
-            'longitude' => 'required',
+            'kode_sensor' => 'required|unique:data_sensors',
+            'latitude' => 'required|unique:data_sensors',
+            'longitude' => 'required|unique:data_sensors',
             'tempat_sensor' => 'required',
             'alamat' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
-        DataSensor::created($request->all());
+        DataSensor::create($request->all());
         return response()->json(['success' => true], 201);
     }
 
@@ -72,8 +73,15 @@ class DataSensorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(DataSensor $dataSensor)
+    public function destroy($id)
     {
-        //
+        try {
+            $delete = DataSensor::findOrFail($id);
+            $delete->delete();
+
+            return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);
+        }
     }
 }

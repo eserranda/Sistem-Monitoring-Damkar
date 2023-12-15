@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\DataSensorController;
+use App\Http\Controllers\MonitoringController;
+use App\Models\Monitoring;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,7 +38,12 @@ Route::get('/add_sensor', function () {
     return view('sensor.add');
 });
 
+Route::controller(MonitoringController::class)->group(function () {
+    Route::get('/get-sensor-locations', 'getSensorLocations')->name("get-sensor-locations.data");
+});
+
 Route::controller(DataSensorController::class)->group(function () {
     Route::get('/sensor', 'index')->name("sensor.index");
     Route::POST('/sensor_store', 'store')->name("sensor.store");
+    Route::delete('/sensor_delete/{id}', 'destroy')->name("sensor.delete");
 });
