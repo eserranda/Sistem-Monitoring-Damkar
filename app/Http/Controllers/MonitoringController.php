@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataDamkar;
 use App\Models\DataSensor;
 use App\Models\Monitoring;
 use Illuminate\Http\Request;
@@ -13,14 +14,15 @@ class MonitoringController extends Controller
      */
     public function index()
     {
-        //
+        $data = DataSensor::all();
+        return view('sensor.index', compact('data'));
     }
 
     public function getSensorLocations()
     {
-
-        $locations = DataSensor::all(['kode_sensor', 'latitude', 'longitude']);
-        return response()->json(['locations' => $locations]);
+        $sensor_locations = DataSensor::all(['nama', 'latitude', 'longitude']);
+        $damkar_locations = DataDamkar::all(['nama', 'latitude', 'longitude']);
+        return response()->json(['sensor_locations' => $sensor_locations, 'damkar_locations' => $damkar_locations]);
     }
 
     /**

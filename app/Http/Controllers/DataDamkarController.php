@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\DataSensor;
-use Illuminate\Support\Facades\Validator;
+use App\Models\DataDamkar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
-class DataSensorController extends Controller
+class DataDamkarController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = DataSensor::all();
-        return view('sensor.index', compact('data'));
+        $data = DataDamkar::all();
+        return view('damkar.index', compact('data'));
     }
 
     /**
@@ -22,7 +22,7 @@ class DataSensorController extends Controller
      */
     public function create()
     {
-        //
+        return view('damkar.add');
     }
 
     /**
@@ -30,13 +30,10 @@ class DataSensorController extends Controller
      */
     public function store(Request $request)
     {
-        $kodeSensor  = $request->input('kode_sensor');
-
         $validator = Validator::make($request->all(), [
-            'kode_sensor' => 'required|unique:data_sensors',
-            'latitude' => 'required|unique:data_sensors',
-            'longitude' => 'required|unique:data_sensors',
-            'tempat_sensor' => 'required',
+            'nama' => 'required|unique:data_damkars',
+            'latitude' => 'required|unique:data_damkars',
+            'longitude' => 'required|unique:data_damkars',
             'alamat' => 'required',
         ]);
 
@@ -44,15 +41,14 @@ class DataSensorController extends Controller
             return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
-        $request->merge(['nama' => $kodeSensor]);
-        DataSensor::create($request->all());
+        DataDamkar::create($request->all());
         return response()->json(['success' => true], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(DataSensor $dataSensor)
+    public function show(DataDamkar $dataDamkar)
     {
         //
     }
@@ -60,7 +56,7 @@ class DataSensorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(DataSensor $dataSensor)
+    public function edit(DataDamkar $dataDamkar)
     {
         //
     }
@@ -68,7 +64,7 @@ class DataSensorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, DataSensor $dataSensor)
+    public function update(Request $request, DataDamkar $dataDamkar)
     {
         //
     }
@@ -76,12 +72,10 @@ class DataSensorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(DataDamkar $dataDamkar, $id)
     {
         try {
-            $delete = DataSensor::findOrFail($id);
-            $delete->delete();
-
+            $dataDamkar::findOrFail($id)->delete();;
             return response()->json(['status' => true, 'message' => 'Data berhasil dihapus'], 200);
         } catch (\Exception $e) {
             return response()->json(['status' => false, 'message' => 'Gagal menghapus data'], 500);

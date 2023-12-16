@@ -22,6 +22,12 @@
                     <div data-i18n="Data Sensor">Data Sensor</div>
                 </a>
             </li>
+            <li class="menu-item">
+                <a href="/damkar" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-firetruck"></i>
+                    <div data-i18n="Data Damkar">Data Damkar</div>
+                </a>
+            </li>
         </ul>
     </div>
 </aside>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DataDamkarController;
 use App\Http\Controllers\DataSensorController;
 use App\Http\Controllers\MonitoringController;
 use App\Models\Monitoring;
@@ -46,4 +47,11 @@ Route::controller(DataSensorController::class)->group(function () {
     Route::get('/sensor', 'index')->name("sensor.index");
     Route::POST('/sensor_store', 'store')->name("sensor.store");
     Route::delete('/sensor_delete/{id}', 'destroy')->name("sensor.delete");
+});
+
+Route::controller(DataDamkarController::class)->group(function () {
+    Route::get('/damkar', 'index')->name("damkar.index");
+    Route::get('/add_damkar', 'create')->name("damkar.create");
+    Route::POST('/damkar_store', 'store')->name("damkar.store");
+    Route::delete('/damkar_delete/{id}', 'destroy')->name("damkar.delete");
 });

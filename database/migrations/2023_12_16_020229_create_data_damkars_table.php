@@ -11,22 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('data_sensors', function (Blueprint $table) {
+        Schema::create('data_damkars', function (Blueprint $table) {
             $table->id();
-            $table->string('kode_sensor');
-            $table->decimal('latitude', 10, 7);
-            $table->decimal('longitude', 10, 7);
-            $table->string('tempat_sensor');
+            $table->string('nama');
+            $table->string('latitude');
+            $table->string('longitude');
             $table->string('alamat');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+
     public function down(): void
     {
-        Schema::dropIfExists('data_sensors');
+        Schema::dropIfExists('data_damkars');
     }
 };
