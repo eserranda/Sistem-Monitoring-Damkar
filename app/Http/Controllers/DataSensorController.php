@@ -30,8 +30,6 @@ class DataSensorController extends Controller
      */
     public function store(Request $request)
     {
-        $kodeSensor  = $request->input('kode_sensor');
-
         $validator = Validator::make($request->all(), [
             'kode_sensor' => 'required|unique:data_sensors',
             'latitude' => 'required|unique:data_sensors',
@@ -44,7 +42,8 @@ class DataSensorController extends Controller
             return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
-        $request->merge(['nama' => $kodeSensor]);
+        $request->merge(['nama' => $request->input('kode_sensor')]);
+        $request->merge(['tipe_marker' => 'sensor']);
         DataSensor::create($request->all());
         return response()->json(['success' => true], 201);
     }

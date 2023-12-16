@@ -30,6 +30,7 @@ class DataDamkarController extends Controller
      */
     public function store(Request $request)
     {
+        $tipeMarker = "damkar";
         $validator = Validator::make($request->all(), [
             'nama' => 'required|unique:data_damkars',
             'latitude' => 'required|unique:data_damkars',
@@ -40,6 +41,8 @@ class DataDamkarController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
+
+        $request->merge(['tipe_marker' => 'damkar']);
 
         DataDamkar::create($request->all());
         return response()->json(['success' => true], 201);

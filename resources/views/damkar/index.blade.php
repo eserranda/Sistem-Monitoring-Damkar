@@ -30,7 +30,7 @@
                         @foreach ($data as $row)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $row->nama_posko }}</td>
+                                <td>{{ $row->nama }}</td>
                                 <td>{{ $row->latitude }}</td>
                                 <td>{{ $row->longitude }}</td>
                                 <td>{{ $row->alamat }}</td>
