@@ -48,6 +48,12 @@ class DataDamkarController extends Controller
         return response()->json(['success' => true], 201);
     }
 
+    public function damkar_locations(DataDamkar $dataSensor)
+    {
+        $dataSensor::all();
+        return response()->json(['status' => true, 'data' => $dataSensor], 200);
+    }
+
     /**
      * Display the specified resource.
      */

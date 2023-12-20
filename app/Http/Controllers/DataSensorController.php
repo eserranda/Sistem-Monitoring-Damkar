@@ -59,6 +59,12 @@ class DataSensorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function sensor_locations(DataSensor $dataSensor)
+    {
+        $dataSensor::all();
+        return response()->json(['status' => true, 'data' => $dataSensor], 200);
+    }
+
     public function edit(DataSensor $dataSensor)
     {
         //

@@ -40,6 +40,9 @@
     <link rel="stylesheet" href="{{ asset('assets') }}/vendor/libs/node-waves/node-waves.css" />
     {{-- <link rel="stylesheet" href="{{ asset('assets') }}z/vendor/libs/typeahead-js/typeahead.css" /> --}}
 
+    {{-- firebase --}}
+    {{-- <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.1/firebase-database.js"></script> --}}
 
     @stack('css')
     <!-- Page CSS -->

@@ -52,7 +52,7 @@
                    <!--/ Style Switcher -->
 
                    <!-- Quick links  -->
-                   <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
+                   {{-- <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                            <i class="ti ti-layout-grid-add ti-md"></i>
@@ -133,11 +133,11 @@
                                </div>
                            </div>
                        </div>
-                   </li>
+                   </li> --}}
                    <!-- Quick links -->
 
                    <!-- Notification -->
-                   <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
+                   {{-- <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                            <i class="ti ti-bell ti-md"></i>
@@ -366,7 +366,7 @@
                                </a>
                            </li>
                        </ul>
-                   </li>
+                   </li> --}}
                    <!--/ Notification -->
 
                    <!-- User -->
@@ -400,7 +400,7 @@
                            <li>
                                <a class="dropdown-item" href="pages-profile-user.html">
                                    <i class="ti ti-user-check me-2 ti-sm"></i>
-                                   <span class="align-middle">My Profile</span>
+                                   <span class="align-middle">Profile</span>
                                </a>
                            </li>
                            <li>
@@ -409,7 +409,7 @@
                                    <span class="align-middle">Settings</span>
                                </a>
                            </li>
-                           <li>
+                           {{-- <li>
                                <a class="dropdown-item" href="pages-account-settings-billing.html">
                                    <span class="d-flex align-items-center align-middle">
                                        <i class="flex-shrink-0 ti ti-credit-card me-2 ti-sm"></i>
@@ -439,7 +439,7 @@
                                    <i class="ti ti-currency-dollar me-2 ti-sm"></i>
                                    <span class="align-middle">Pricing</span>
                                </a>
-                           </li>
+                           </li> --}}
                            <li>
                                <div class="dropdown-divider"></div>
                            </li>

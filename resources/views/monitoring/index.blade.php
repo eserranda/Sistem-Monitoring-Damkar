@@ -6,7 +6,7 @@
 @endpush
 @section('content')
     <div class="col-12">
-        <h5>Lokasi Sensor</h5>
+        <h5>Maps Sensor dan Posko Damkar</h5>
         <div class="card">
             <div class="leaflet-map  m-1" id="sensorMaps"></div>
         </div>
