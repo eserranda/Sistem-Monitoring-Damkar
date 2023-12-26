@@ -30,8 +30,10 @@ class DataDamkarController extends Controller
      */
     public function store(Request $request)
     {
-        $tipeMarker = "damkar";
+        // $tipeMarker = "damkar";
+
         $validator = Validator::make($request->all(), [
+            'id_damkar' => 'required|unique:data_damkars',
             'nama' => 'required|unique:data_damkars',
             'latitude' => 'required|unique:data_damkars',
             'longitude' => 'required|unique:data_damkars',
@@ -48,9 +50,9 @@ class DataDamkarController extends Controller
         return response()->json(['success' => true], 201);
     }
 
-    public function damkar_locations(DataDamkar $dataSensor)
+    public function damkarLocations(DataDamkar $dataSensor)
     {
-        $dataSensor::all();
+        $dataSensor = DataDamkar::all();
         return response()->json(['status' => true, 'data' => $dataSensor], 200);
     }
 

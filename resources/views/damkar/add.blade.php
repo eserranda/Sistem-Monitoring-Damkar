@@ -14,9 +14,17 @@
                 <div class="card-body">
                     <form action="" method="POST" id="form_data_damkar" novalidate>
                         <div class="mb-3">
+                            <label class="form-label" for="form-repeater-1-3">Pilih Poskoh</label>
+                            <select class="form-select" id="id_damkar" name="id_damkar" required>
+                                <option value="" selected disabled> Pilih Tempat </option>
+                            </select>
+                            <div class="invalid-feedback"> </div>
+                        </div>
+
+                        <div class="mb-3">
                             <label class="form-label" for="bs-validation-name">Nama Posko</label>
                             <input type="text" class="form-control" id="nama" name="nama"
-                                placeholder="Nama Posko" required />
+                                placeholder="Nama Posko" required readonly />
                             <div class="invalid-feedback"> </div>
                         </div>
 
@@ -25,13 +33,17 @@
                                 <label class="form-label" for="">Latitude</label>
                                 <input type="text" id="latitude" name="latitude" class="form-control"
                                     placeholder="Latitude" value="-5.11038164480454" required />
+                                <div class="invalid-feedback"> </div>
+
                             </div>
 
                             <div class="mb-3 col-lg-5 mb-0">
                                 <label class="form-label" for="">Longitude</label>
                                 <input type="text" id="longitude" name="longitude" class="form-control"
                                     placeholder="Longitude" value=" 119.50185691687646" required />
+                                <div class="invalid-feedback"> </div>
                             </div>
+
                             <div class="mb-3 col-lg-2 d-flex align-items-center mb-0">
                                 <button type="button" class="btn btn-info mt-4 btn-sm" id="viewMaps">
                                     <i class="ti ti-map-2 text-black"></i>
@@ -66,6 +78,42 @@
 
     @push('script')
         <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const dropdown = document.getElementById('id_damkar');
+                const namaInput = document.getElementById('nama');
+
+                let fetchedData;
+                dropdown.addEventListener('change', function() {
+                    const selectedUserId = dropdown.value;
+                    const selectedUserData = fetchedData.data.find(user => user.id === parseInt(
+                        selectedUserId));
+                    if (selectedUserData) {
+                        namaInput.value = selectedUserData.name;
+                    } else {
+                        namaInput.value = '';
+                    }
+                });
+
+                // Fetch data dari backend
+                fetch('get_data_users')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status && data.data.length > 0) {
+                            // Mengisi dropdown dengan data
+                            data.data.forEach(user => {
+                                const option = document.createElement('option');
+                                option.value = user.id;
+                                option.textContent = user.name;
+                                dropdown.appendChild(option);
+                            });
+                            fetchedData = data;
+                        } else {
+                            console.error('Data tidak valid atau kosong');
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            });
+
             function handleValidationErrors(errors) {
                 if (errors && typeof errors === 'object') {
                     Object.keys(errors).forEach(fieldName => {

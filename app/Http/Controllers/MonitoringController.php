@@ -15,7 +15,7 @@ class MonitoringController extends Controller
     public function index()
     {
         $data = DataSensor::all();
-        return view('sensor.index', compact('data'));
+        return view('monitoring.index', compact('data'));
     }
 
     public function getSensorLocations()

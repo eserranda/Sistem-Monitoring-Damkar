@@ -22,7 +22,7 @@ class DataSensorController extends Controller
      */
     public function create()
     {
-        //
+        return view('sensor.add');
     }
 
     /**
@@ -59,9 +59,15 @@ class DataSensorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function sensor_locations(DataSensor $dataSensor)
+    public function statusSensors(DataSensor $dataSensor)
     {
-        $dataSensor::all();
+        $statusSensors = DataSensor::all(['nama', 'status', 'latitude', 'longitude']);
+        return response()->json(['status' => true, 'data' => $statusSensors], 200);
+    }
+
+    public function sensorLocations(DataSensor $dataSensor)
+    {
+        $dataSensor = DataSensor::all();
         return response()->json(['status' => true, 'data' => $dataSensor], 200);
     }
 
