@@ -6,6 +6,12 @@
 
     <script src="https://rawgit.com/mapshakers/leaflet-icon-pulse/master/src/L.Icon.Pulse.js"></script>
     <link rel="stylesheet" href="https://rawgit.com/mapshakers/leaflet-icon-pulse/master/src/L.Icon.Pulse.css" />
+
+    <!-- Tautan Skrip -->
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+    <!-- Gaya -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 @endpush
 @section('content')
     <style>
@@ -136,24 +142,30 @@
                     }, 1000);
                 }
 
-
                 function stopFlashing() {
                     clearInterval(flashingInterval);
                     var mapWarningSensors = document.getElementById('mapWarningSensors');
                     mapWarningSensors.classList.remove('flash-border');
                 }
 
+                function clearMarkers() {
+                    mapSensor.eachLayer(function(layer) {
+                        if (layer instanceof L.Marker) {
+                            mapSensor.removeLayer(layer);
+                        }
+                    });
+                }
+
                 var modal = $('#fullscreenModal');
 
-                var markerSensor;
                 var mapSensor = L.map('mapWarningSensors').setView([-5.1103816, 119.5018569], 13);
 
                 let intervalId;
 
-
                 modal.on('hidden.bs.modal', function() {
                     stopFlashing();
                     intervalId = setInterval(fetchStatusSensors, 3000);
+                    clearMarkers(mapSensor);
                 });
 
                 modal.on('shown.bs.modal', function() {
@@ -165,19 +177,21 @@
                     fetch('/status_sensors')
                         .then(response => response.json())
                         .then(data => {
+                            const damkarLatitude = data.location[0].latitude;
+                            const damkarLongitude = data.location[0].longitude;
+
                             var sensorWithStatusOne = data.data.find(item => item.status === '1');
 
                             if (sensorWithStatusOne) {
                                 modal.modal('show');
-                                startFlashing();
-
                                 clearMarkers(mapSensor);
 
                                 var latitude = sensorWithStatusOne.latitude;
                                 var longitude = sensorWithStatusOne.longitude;
                                 var nama = sensorWithStatusOne.nama;
 
-                                displayMarkersSensors(latitude, longitude, nama, 'red', mapSensor);
+                                displayMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
+                                    damkarLongitude);
 
                                 clearInterval(intervalId);
                             }
@@ -186,9 +200,11 @@
                         .catch(error => console.error('Error fetching data:', error));
                 }
 
-                intervalId = setInterval(fetchStatusSensors, 3000);
+                intervalId = setInterval(fetchStatusSensors, 1000);
 
-                function displayMarkersSensors(latitude, longitude, nama, iconColor, mapSensor) {
+                function displayMarkersSensors(latitude, longitude, nama, iconColor, mapSensor, damkarLatitude,
+                    damkarLongitude) {
+
                     var sensorInfoContent = `
                         <div class="card m-0" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
                             <div class="card-body ">
@@ -221,32 +237,53 @@
                         attribution: '© OpenStreetMap contributors'
                     }).addTo(mapSensor);
 
+                    L.marker([damkarLatitude, damkarLongitude])
+                        .addTo(mapSensor)
+
                     var pulsingIcon = L.icon.pulse({
                         iconSize: [14, 14],
                         color: 'red'
                     });
 
-                    // tileLayer.on('load', function() {
+                    var pulsingIcon = L.icon.pulse({
+                        iconSize: [14, 14],
+                        color: 'red'
+                    });
+
+
+                    var control = L.Routing.control({
+                        waypoints: [
+                            L.latLng(damkarLatitude, damkarLongitude), // Koordinat Titik A
+                            L.latLng(latitude, longitude) // Koordinat Titik B
+                        ],
+                        routeWhileDragging: true,
+                        createMarker: function(i, waypoint, n) {
+                            if (i === n - 1) {
+                                return L.marker(waypoint.latLng, {
+                                    icon: pulsingIcon
+                                });
+                            }
+                        },
+                        show: false
+                    }).addTo(mapSensor);
+
+
                     var marker = L.marker([latitude, longitude], {
                             icon: pulsingIcon
                         })
                         .addTo(mapSensor)
-                    // .bindPopup(nama)
-                    // .openPopup();
 
                     mapSensor.invalidateSize();
-                    mapSensor.setView([latitude, longitude], 13);
-                    // }
                 }
 
-                function clearMarkers() {
-                    mapSensor.eachLayer(function(layer) {
-                        if (layer instanceof L.Marker) {
-                            mapSensor.removeLayer(layer);
-                        }
-                    });
-                }
+
             });
         </script>
     @endpush
 @endsection
+
+{{-- // for (const location of data.location) {
+// const damkarLatitude = location.latitude;
+// const damkarLongitude = location.longitude;
+// console.log(damkarLatitude, damkarLongitude);
+// } --}}

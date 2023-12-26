@@ -57,7 +57,7 @@
             function hapus(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
-                    text: 'Jadwal pelajaran akan dihapus permanen!',
+                    text: 'Data akan dihapus permanen!',
                     icon: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#d33',
@@ -78,23 +78,23 @@
                                 if (response.status) {
                                     Swal.fire(
                                         'Terhapus!',
-                                        'Jadwal pelajaran berhasil dihapus.',
+                                        'Data berhasil dihapus.',
                                         'success'
                                     );
                                     location.reload();
                                 } else {
                                     Swal.fire(
                                         'Gagal!',
-                                        'Terjadi kesalahan saat menghapus Jadwal pelajaran.',
+                                        'Terjadi kesalahan saat menghapus Data.',
                                         'error'
                                     );
                                 }
                             },
                             error: function(error) {
-                                console.log('Gagal menghapus Jadwal pelajaran: ' + error);
+                                console.log('Gagal menghapus Data: ' + error);
                                 Swal.fire(
                                     'Gagal!',
-                                    'Terjadi kesalahan saat menghapus Jadwal pelajaran.',
+                                    'Terjadi kesalahan saat menghapus Data.',
                                     'error'
                                 );
                             }
