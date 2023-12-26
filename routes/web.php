@@ -43,7 +43,7 @@ Route::prefix('akun')->controller(UserController::class)->group(function () {
 });
 
 Route::controller(DashboardController::class)->group(function () {
-    Route::get('/', 'index')->name("dashboard.data");
+    Route::get('/', 'index')->name("dashboard.data")->name('dashboard')->middleware('auth');
     Route::get('/dashboard', 'index')->name("dashboard.data")->name('dashboard')->middleware('auth');
     // unknown route
     Route::get('/dashboard/show', 'show')->name("dashboard.show")->name('dashboard.show');
