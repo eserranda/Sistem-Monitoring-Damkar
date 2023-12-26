@@ -27,8 +27,8 @@
                             <tr>
                                 <th>Sensor</th>
                                 <th>Koneksi</th>
-                                <th>STATUS</th>
-                                <th>Keterangan</th>
+                                <th>Status</th>
+                                <th>Ket.</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -101,40 +101,142 @@
     @push('script')
         <script>
             document.addEventListener('DOMContentLoaded', function() {
+                function showData() {
+                    const token = localStorage.getItem('token');
+                    fetch('/dashboard/show', {
+                            headers: {
+                                'Authorization': 'Bearer ${token}',
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.data);
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                }
+
+                showData();
+
                 var mapSensor = L.map('sensorMaps').setView([-5.1103816, 119.5018569], 13);
-                var mapDamkar = L.map('damkarMaps').setView([-5.1103816, 119.5018569], 13);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapSensor);
 
                 function fetchAndDisplayMarkersSensor() {
-                    fetch('/sensor_locations')
+                    const token = localStorage.getItem('token');
+
+                    fetch('/sensor_locations', {
+                            headers: {
+                                'Authorization': 'Bearer ${token}',
+                                'Content-Type': 'application/json',
+                            },
+                        })
                         .then(response => response.json())
                         .then(data => {
-                            // clearMarkers();
+                            clearMarkers(mapSensor);
+                            displayMarkersSensors(data.data, 'sensor', mapSensor);
+                            console.log(data.data);
                         })
                         .catch(error => console.error('Error fetching data:', error));
                 }
 
+
+                function displayMarkersSensors(locations, iconColor, map) {
+                    locations.forEach(location => {
+                        var latitude = location.latitude;
+                        console.log(latitude);
+                        var longitude = location.longitude;
+                        var nama = location.nama;
+
+                        var customIcon = new L.Icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        });
+
+                        L.marker([latitude, longitude], {
+                                icon: customIcon
+                            })
+                            .addTo(map)
+                            .bindPopup(nama, {
+                                closeButton: false,
+                                closeOnClick: false,
+                                autoClose: false,
+                            })
+                            .openPopup();
+                    });
+                }
+
+                function clearMarkers(mapSensor) {
+                    mapSensor.eachLayer(function(layer) {
+                        if (layer instanceof L.Marker) {
+                            mapSensor.removeLayer(layer);
+                        }
+                    });
+                }
+
                 fetchAndDisplayMarkersSensor();
 
-
+                var mapDamkar = L.map('damkarMaps').setView([-5.1103816, 119.5018569], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapDamkar);
 
                 function fetchAndDisplayMarkersDamkar() {
-                    fetch('/sensor_locations')
+                    fetch('/damkar_locations')
                         .then(response => response.json())
                         .then(data => {
-                            // clearMarkers();
+                            clearMarkers(mapDamkar);
+
+                            displayMarkersDamkars(data.data, 'damkar', mapDamkar);
+                            console.log(data.data);
                         })
                         .catch(error => console.error('Error fetching data:', error));
                 }
 
+                function displayMarkersDamkars(locations, iconColor, map) {
+                    locations.forEach(location => {
+                        var latitude = location.latitude;
+                        var longitude = location.longitude;
+                        var nama = location.nama;
+
+                        var customIcon = new L.Icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        });
+
+                        L.marker([latitude, longitude], {
+                                icon: customIcon
+                            })
+                            .addTo(map)
+                            .bindPopup(nama, {
+                                closeButton: false,
+                                closeOnClick: false,
+                                autoClose: false,
+                            })
+                            .openPopup();
+                    });
+                }
+
+
+                function clearMarkers(mapDamkar) {
+                    mapDamkar.eachLayer(function(layer) {
+                        if (layer instanceof L.Marker) {
+                            mapDamkar.removeLayer(layer);
+                        }
+                    });
+                }
+
                 fetchAndDisplayMarkersDamkar();
-                // setInterval(fetchAndDisplayMarkers, 5000);
             });
         </script>
     @endpush

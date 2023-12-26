@@ -369,6 +369,11 @@
                    </li> --}}
                    <!--/ Notification -->
 
+                   <li class="nav-item my-1 mx-xl-2">
+                       <span class="fw-semibold d-block mb-0">{{ Auth::user()->name }}</span>
+                       {{-- <small class="text-muted">{{ Auth::user()->role }}</small> --}}
+                   </li>
+
                    <!-- User -->
                    <li class="nav-item navbar-dropdown dropdown-user dropdown">
                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
@@ -377,6 +382,7 @@
                                <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
                            </div>
                        </a>
+
                        <ul class="dropdown-menu dropdown-menu-end">
                            <li>
                                <a class="dropdown-item" href="pages-account-settings-account.html">
@@ -388,8 +394,8 @@
                                            </div>
                                        </div>
                                        <div class="flex-grow-1">
-                                           <span class="fw-semibold d-block">John Doe</span>
-                                           <small class="text-muted">Admin</small>
+                                           <span class="fw-semibold d-block">{{ Auth::user()->name }}</span>
+                                           <small class="text-muted">{{ Auth::user()->role }}</small>
                                        </div>
                                    </div>
                                </a>
@@ -398,7 +404,7 @@
                                <div class="dropdown-divider"></div>
                            </li>
                            <li>
-                               <a class="dropdown-item" href="pages-profile-user.html">
+                               <a class="dropdown-item" href="/profile">
                                    <i class="ti ti-user-check me-2 ti-sm"></i>
                                    <span class="align-middle">Profile</span>
                                </a>
@@ -444,7 +450,7 @@
                                <div class="dropdown-divider"></div>
                            </li>
                            <li>
-                               <a class="dropdown-item" href="auth-login-cover.html" target="_blank">
+                               <a class="dropdown-item" href="logout">
                                    <i class="ti ti-logout me-2 ti-sm"></i>
                                    <span class="align-middle">Log Out</span>
                                </a>
@@ -452,6 +458,8 @@
                        </ul>
                    </li>
                    <!--/ User -->
+
+
                </ul>
            </div>
 

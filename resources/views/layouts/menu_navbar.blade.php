@@ -3,29 +3,35 @@
     <div class="container-xxl d-flex h-100">
         <ul class="menu-inner py-1">
             <!-- Page -->
-            <li class="menu-item active">
+            <li class="menu-item {{ Request::is('dashboard*') ? 'active show' : '' }}">
                 <a href="/dashboard" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-smart-home"></i>
                     <div data-i18n="Dashboard">Dashboard</div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Request::is('monitoring*') ? 'active show' : '' }}">
                 <a href="/monitoring" class="menu-link">
                     {{-- <i class="menu-icon tf-icons ti ti-app-window"></i> --}}
                     <i class="menu-icon tf-icons ti ti-screen-share"></i>
                     <div data-i18n="Monitoring">Monitoring</div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Request::is('sensor*', 'add_sensor') ? 'active show' : '' }}">
                 <a href="/sensor" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-list-check"></i>
                     <div data-i18n="Data Sensor">Data Sensor</div>
                 </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {{ Request::is('damkar*', 'add_damkar') ? 'active show' : '' }}">
                 <a href="/damkar" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-firetruck"></i>
                     <div data-i18n="Data Damkar">Data Damkar</div>
+                </a>
+            </li>
+            <li class="menu-item {{ Request::is('akun*', 'add_akun') ? 'active show' : '' }}">
+                <a href="{{ route('akun') }}" class="menu-link">
+                    <i class="menu-icon tf-icons ti ti-user-circle"></i>
+                    <div data-i18n="Akun">Akun</div>
                 </a>
             </li>
         </ul>

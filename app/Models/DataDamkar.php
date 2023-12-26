@@ -10,6 +10,7 @@ class DataDamkar extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_damkar',
         'nama',
         'latitude',
         'longitude',
