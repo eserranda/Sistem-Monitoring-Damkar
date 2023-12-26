@@ -37,9 +37,16 @@ Route::prefix('akun')->controller(UserController::class)->group(function () {
     Route::get('/', 'index')->name("akun");
     Route::get('/add', 'addUser')->name("add_users");
     Route::post('/add', 'store')->name("store_users");
-    // Route::get('/dashboard', 'index')->name("dashboard.data")->name('dashboard')->middleware('auth');
-    // // unknown route
-    // Route::get('/dashboard/show', 'show')->name("dashboard.show")->name('dashboard.show');
+    Route::delete('/delete/{id}', 'destroy')->name("delete_users")->middleware('auth');
+});
+
+Route::controller(DataSensorController::class)->group(function () {
+    Route::get('/sensor', 'index')->name("sensor.index")->middleware('auth');
+    Route::get('/add_sensor', 'create')->middleware('auth');
+    Route::get('/sensor_locations', 'sensorLocations')->name("sensor_locations.data");
+    Route::get('/status_sensors', 'statusSensors')->name("status_sensors.data");
+    Route::POST('/sensor_store', 'store')->name("sensor.store")->middleware('auth');
+    Route::delete('/sensor_delete/{id}', 'destroy')->name("sensor.delete")->middleware('auth');
 });
 
 Route::controller(DashboardController::class)->group(function () {
@@ -64,14 +71,7 @@ Route::controller(MonitoringController::class)->group(function () {
     Route::get('/get-sensor-locations', 'getSensorLocations')->name("get-sensor-locations.data");
 });
 
-Route::controller(DataSensorController::class)->group(function () {
-    Route::get('/sensor', 'index')->name("sensor.index")->middleware('auth');
-    Route::get('/add_sensor', 'create')->middleware('auth');
-    Route::get('/sensor_locations', 'sensorLocations')->name("sensor_locations.data");
-    Route::get('/status_sensors', 'statusSensors')->name("status_sensors.data");
-    Route::POST('/sensor_store', 'store')->name("sensor.store")->middleware('auth');
-    Route::delete('/sensor_delete/{id}', 'destroy')->name("sensor.delete")->middleware('auth');
-});
+
 
 Route::controller(DataDamkarController::class)->group(function () {
     Route::get('/damkar', 'index')->name("damkar.index")->middleware('auth');;

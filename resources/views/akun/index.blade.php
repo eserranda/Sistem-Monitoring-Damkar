@@ -35,10 +35,6 @@
                                 <td>{{ $row->email }}</td>
                                 <td>{{ $row->role }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-icon btn-outline-secondary">
-                                        <span class="ti ti-map-2 text-info"></span>
-                                    </button>
-
                                     <button type="button" class="btn btn-icon btn-outline-secondary"
                                         onclick="hapus({{ $row->id }})">
                                         <span class="ti ti-trash-x text-danger"></span>
@@ -51,4 +47,60 @@
             </div>
         </div>
     </div>
+
+    @push('script')
+        <script>
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: 'Data akan di hapus permanen!',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Ya, hapus!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+                        // var url = '{{ url('delete_users') }}/' + id;
+                        var url = '{{ route('delete_users', ['id' => '__id__']) }}';
+                        url = url.replace('__id__', id);
+
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            data: {
+                                _token: csrfToken
+                            },
+                            success: function(response) {
+                                console.log('Response:', response);
+                                if (response.status) {
+                                    Swal.fire(
+                                        'Terhapus!',
+                                        'Data Berhasil di Hapus.',
+                                        'success'
+                                    );
+                                    location.reload();
+                                } else {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Terjadi kesalahan saat menghapus data.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(error) {
+                                console.log('Gagal menghapus data: ' + error);
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Terjadi kesalahan saat menghapus data.',
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            }
+        </script>
+    @endpush
 @endsection

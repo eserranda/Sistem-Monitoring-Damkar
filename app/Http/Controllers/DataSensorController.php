@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\DataDamkar;
 use App\Models\DataSensor;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -59,10 +60,12 @@ class DataSensorController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function statusSensors(DataSensor $dataSensor)
+    public function statusSensors()
     {
         $statusSensors = DataSensor::all(['nama', 'status', 'latitude', 'longitude']);
-        return response()->json(['status' => true, 'data' => $statusSensors], 200);
+        $id_user = auth()->user()->id;
+        $location = DataDamkar::where('id_damkar', $id_user)->get(['latitude', 'longitude']);
+        return response()->json(['status' => true, 'data' => $statusSensors, 'location' => $location], 200);
     }
 
     public function sensorLocations(DataSensor $dataSensor)
