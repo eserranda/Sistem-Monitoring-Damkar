@@ -148,43 +148,46 @@
                     mapWarningSensors.classList.remove('flash-border');
                 }
 
-                function clearMarkers() {
-                    mapSensor.eachLayer(function(layer) {
-                        if (layer instanceof L.Marker) {
-                            mapSensor.removeLayer(layer);
-                        }
-                    });
-                }
-
                 var modal = $('#fullscreenModal');
-
                 var mapSensor = L.map('mapWarningSensors').setView([-5.1103816, 119.5018569], 13);
 
+                var fetchingData = true;
                 let intervalId;
-
+                console.log(fetchingData);
                 modal.on('hidden.bs.modal', function() {
                     stopFlashing();
-                    intervalId = setInterval(fetchStatusSensors, 3000);
-                    clearMarkers(mapSensor);
+                    intervalId = setInterval(fetchStatusSensors, 5000);
+                    fetchingData = true;
+                    if (mapSensor) {
+                        mapSensor = null;
+                    }
                 });
 
                 modal.on('shown.bs.modal', function() {
-                    mapSensor.invalidateSize();
                     startFlashing();
+                    mapSensor.invalidateSize();
+                    fetchingData = false;
                 });
 
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(mapSensor);
+
                 function fetchStatusSensors() {
+                    if (!fetchingData) {
+                        return;
+                    }
+
                     fetch('/status_sensors')
                         .then(response => response.json())
                         .then(data => {
                             const damkarLatitude = data.location[0].latitude;
                             const damkarLongitude = data.location[0].longitude;
-
                             var sensorWithStatusOne = data.data.find(item => item.status === '1');
 
                             if (sensorWithStatusOne) {
                                 modal.modal('show');
-                                clearMarkers(mapSensor);
 
                                 var latitude = sensorWithStatusOne.latitude;
                                 var longitude = sensorWithStatusOne.longitude;
@@ -244,12 +247,6 @@
                         iconSize: [14, 14],
                         color: 'red'
                     });
-
-                    var pulsingIcon = L.icon.pulse({
-                        iconSize: [14, 14],
-                        color: 'red'
-                    });
-
 
                     var control = L.Routing.control({
                         waypoints: [
