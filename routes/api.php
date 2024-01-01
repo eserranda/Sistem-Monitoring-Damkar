@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::post('/data1', function (Request $request) {
+    $dataFromEsp32 = $request->input('data');
+    return response()->json(['message' => 'Hai, From Laravel I ', 'data1' => $dataFromEsp32], 200);
+});
+
+Route::post('/data2', function (Request $request) {
+    $dataFromEsp32 = $request->input('data');
+    return response()->json(['message' => 'Hai, From Laravel II', 'data2' => $dataFromEsp32], 200);
+});
