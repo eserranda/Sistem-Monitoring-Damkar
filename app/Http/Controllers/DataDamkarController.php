@@ -59,9 +59,11 @@ class DataDamkarController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DataDamkar $dataDamkar)
+    public function show(DataDamkar $dataDamkar, $id)
     {
-        //
+        $dataDamkar = $dataDamkar->find($id);
+        // dd($dataDamkar);
+        return view('damkar.edit', compact('dataDamkar', 'dataDamkar'));
     }
 
     /**
@@ -77,7 +79,27 @@ class DataDamkarController extends Controller
      */
     public function update(Request $request, DataDamkar $dataDamkar)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'id_damkar' => 'required',
+            'nama' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'alamat' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
+        }
+
+        $dataDamkar->where('id', $request->id)->update([
+            'id_damkar' => $request->id_damkar,
+            'nama' => $request->nama,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'alamat' => $request->alamat,
+        ]);
+
+        return response()->json(['success' => true], 201);
     }
 
     /**

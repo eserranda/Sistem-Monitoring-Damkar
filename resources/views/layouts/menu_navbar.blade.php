@@ -18,7 +18,7 @@
             </li>
             <li class="menu-item {{ Request::is('sensor*', 'add_sensor') ? 'active show' : '' }}">
                 <a href="/sensor" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-list-check"></i>
+                    <i class="menu-icon tf-icons ti ti-temperature"></i>
                     <div data-i18n="Data Sensor">Data Sensor</div>
                 </a>
             </li>

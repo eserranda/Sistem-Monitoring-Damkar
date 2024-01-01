@@ -44,7 +44,7 @@
                <ul class="navbar-nav flex-row align-items-center ms-auto">
 
                    <!-- Style Switcher -->
-                   <li class="nav-item me-2 me-xl-0">
+                   <li class="nav-item me-xl-0">
                        <a class="nav-link style-switcher-toggle hide-arrow" href="javascript:void(0);">
                            <i class="ti ti-md"></i>
                        </a>
@@ -369,9 +369,9 @@
                    </li> --}}
                    <!--/ Notification -->
 
-                   <li class="nav-item my-1 mx-xl-2">
-                       <span class="fw-semibold d-block mb-0">{{ Auth::user()->name }}</span>
-                       {{-- <small class="text-muted">{{ Auth::user()->role }}</small> --}}
+                   <li class="nav-item my-1 mx-2 mx-xl-1">
+                       <h6 class="mb-0">{{ Auth::user()->name }}</h6>
+                       <small class="text-muted mt-0">{{ Auth::user()->role }}</small>
                    </li>
 
                    <!-- User -->

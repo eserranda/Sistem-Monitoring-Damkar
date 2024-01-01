@@ -39,6 +39,10 @@
                                         <span class="ti ti-map-2 text-info"></span>
                                     </button>
 
+                                    <a href="/edit_damkar/{{ $row->id }}" class="btn btn-icon btn-outline-secondary">
+                                        <span class="ti ti-edit text-warning"></span>
+                                    </a>
+
                                     <button type="button" class="btn btn-icon btn-outline-secondary"
                                         onclick="hapus({{ $row->id }})">
                                         <span class="ti ti-trash-x text-danger"></span>

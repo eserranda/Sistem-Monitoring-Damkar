@@ -51,10 +51,6 @@
     </style>
 
     <div class="col-12">
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#fullscreenModal">
-            Warning
-        </button>
-
         <h5>Maps Sensor dan Posko Damkar</h5>
         <div class="card">
             <!-- Card -->
@@ -86,52 +82,6 @@
 
     @push('script')
         <script>
-            // var flashingInterval;
-
-            // function startFlashing() {
-            //     flashingInterval = setInterval(function() {
-            //         var mapWarningSensors = document.getElementById('mapWarningSensors');
-            //         mapWarningSensors.classList.toggle('flash-border');
-            //     }, 500);
-            // }
-
-
-            // function stopFlashing() {
-            //     clearInterval(flashingInterval);
-            //     var mapWarningSensors = document.getElementById('mapWarningSensors');
-            //     mapWarningSensors.classList.remove('flash-border');
-            // }
-
-            // function clearMap() {
-            //     if (map) {
-            //         map.off(); // Matikan event listener terkait peta
-            //         map.remove(); // Hapus peta dari DOM
-            //     }
-            // }
-
-            // function initializeMap() {
-            //     var map = L.map('mapWarningSensors').setView([-5.1103816, 119.5018569], 13);
-
-            //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            //         attribution: '© OpenStreetMap contributors'
-            //     }).addTo(map);
-            // }
-
-            // $('#fullscreenModal').on('shown.bs.modal', function() {
-            //     initializeMap();
-            //     startFlashing();
-            // });
-
-            // $('#fullscreenModal').on('hidden.bs.modal', function() {
-            //     clearMap();
-            //     stopFlashing();
-            // });
-
-
-            // modal.on('shown.bs.modal', function() {
-            //     mapSensor.invalidateSize();
-            //     startFlashing();
-            // });
             document.addEventListener('DOMContentLoaded', function() {
                 var flashingInterval;
 
@@ -175,35 +125,36 @@
                 }).addTo(mapSensor);
 
                 function fetchStatusSensors() {
+
                     if (!fetchingData) {
                         return;
                     }
 
-                    fetch('/status_sensors')
+                    fetch('/monitoring')
                         .then(response => response.json())
                         .then(data => {
-                            const damkarLatitude = data.location[0].latitude;
-                            const damkarLongitude = data.location[0].longitude;
-                            var sensorWithStatusOne = data.data.find(item => item.status === '1');
+                            // const damkarLatitude = data.location[0].latitude;
+                            // const damkarLongitude = data.location[0].longitude;
+                            // var sensorWithStatusOne = data.data.find(item => item.status === '1');
 
-                            if (sensorWithStatusOne) {
-                                modal.modal('show');
+                            // if (sensorWithStatusOne) {
+                            //     modal.modal('show');
 
-                                var latitude = sensorWithStatusOne.latitude;
-                                var longitude = sensorWithStatusOne.longitude;
-                                var nama = sensorWithStatusOne.nama;
+                            //     var latitude = sensorWithStatusOne.latitude;
+                            //     var longitude = sensorWithStatusOne.longitude;
+                            //     var nama = sensorWithStatusOne.nama;
 
-                                displayMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
-                                    damkarLongitude);
+                            //     displayMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
+                            //         damkarLongitude);
 
-                                clearInterval(intervalId);
-                            }
+                            //     clearInterval(intervalId);
+                            // }
                             console.log(data.data);
                         })
                         .catch(error => console.error('Error fetching data:', error));
                 }
 
-                intervalId = setInterval(fetchStatusSensors, 1000);
+                intervalId = setInterval(fetchStatusSensors, 5000);
 
                 function displayMarkersSensors(latitude, longitude, nama, iconColor, mapSensor, damkarLatitude,
                     damkarLongitude) {

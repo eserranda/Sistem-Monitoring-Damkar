@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SensorMonitoringController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,12 +20,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('/data1', function (Request $request) {
-    $dataFromEsp32 = $request->input('data');
-    return response()->json(['message' => 'Hai, From Laravel I ', 'data1' => $dataFromEsp32], 200);
-});
+// Route::post('/data', function (Request $request) {
+//     $dataFromEsp32 = $request->input('data');
+//     return response()->json(['message' => 'Hai, From Laravel I ', 'data' => $dataFromEsp32], 200);
+// });
 
-Route::post('/data2', function (Request $request) {
-    $dataFromEsp32 = $request->input('data');
-    return response()->json(['message' => 'Hai, From Laravel II', 'data2' => $dataFromEsp32], 200);
+Route::controller(SensorMonitoringController::class)->group(function () {
+    Route::post('/data', 'update')->name("sensor.update");
+
+    // Route::get('/monitoring', 'monitoring')->name("monitoring.data");
 });

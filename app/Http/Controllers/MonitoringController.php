@@ -22,6 +22,7 @@ class MonitoringController extends Controller
     {
         $sensor_locations = DataSensor::all(['nama', 'tipe_marker', 'latitude', 'longitude']);
         $damkar_locations = DataDamkar::all(['nama', 'tipe_marker', 'latitude', 'longitude']);
+
         return response()->json(['sensor_locations' => $sensor_locations, 'damkar_locations' => $damkar_locations]);
     }
 
