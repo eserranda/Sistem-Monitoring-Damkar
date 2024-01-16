@@ -102,10 +102,8 @@
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 function showData() {
-                    const token = localStorage.getItem('token');
                     fetch('/dashboard/show', {
                             headers: {
-                                'Authorization': 'Bearer ${token}',
                                 'Content-Type': 'application/json',
                             },
                         })
@@ -125,11 +123,8 @@
                 }).addTo(mapSensor);
 
                 function fetchAndDisplayMarkersSensor() {
-                    const token = localStorage.getItem('token');
-
                     fetch('/sensor_locations', {
                             headers: {
-                                'Authorization': 'Bearer ${token}',
                                 'Content-Type': 'application/json',
                             },
                         })
@@ -199,6 +194,8 @@
                         .catch(error => console.error('Error fetching data:', error));
                 }
 
+                fetchAndDisplayMarkersDamkar();
+
                 function displayMarkersDamkars(locations, iconColor, map) {
                     locations.forEach(location => {
                         var latitude = location.latitude;
@@ -236,7 +233,6 @@
                     });
                 }
 
-                fetchAndDisplayMarkersDamkar();
             });
         </script>
     @endpush

@@ -15,7 +15,7 @@
 @endpush
 @section('content')
     <style>
-        #mapWarningSensors.flash-border {
+        #sensorMaps.flash-border {
             box-shadow: 0 0 20px red;
             animation: flash 1s ease-in-out infinite;
             border-radius: 15px;
@@ -33,11 +33,7 @@
             }
         }
 
-        #sensorMaps {
-            height: 400px;
-            /* Sesuaikan dengan tinggi yang diinginkan */
-        }
-
+        /* tidak di gunakan */
         #mapCard {
             position: absolute;
             top: 10px;
@@ -50,116 +46,217 @@
         }
     </style>
 
-    <div class="col-12">
-        <h5>Maps Sensor dan Posko Damkar</h5>
+    <div class="col-12 my-3">
+        <h3 class="text-center  ">Sistem Monitoring Kebakaran <b>{{ Auth::user()->name }}</b></h3>
         <div class="card">
-            <!-- Card -->
-            <div class="leaflet-map  m-1" id="sensorMaps"></div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal fade" id="fullscreenModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-danger" id="modalFullTitle">PERINGATAN!</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="leaflet-map" id="mapWarningSensors" style="height: 100%;">
-
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
+            <div class="leaflet-map" style="width: 100%; height: 500px;" id="sensorMaps"></div>
         </div>
     </div>
 
     @push('script')
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var flashingInterval;
+            var flashingInterval;
 
-                function startFlashing() {
-                    flashingInterval = setInterval(function() {
-                        var mapWarningSensors = document.getElementById('mapWarningSensors');
-                        mapWarningSensors.classList.toggle('flash-border');
-                    }, 1000);
-                }
+            function startFlashing() {
+                flashingInterval = setInterval(function() {
+                    var sensorMaps = document.getElementById('sensorMaps');
+                    sensorMaps.classList.toggle('flash-border');
+                }, 1000);
+            }
 
-                function stopFlashing() {
-                    clearInterval(flashingInterval);
-                    var mapWarningSensors = document.getElementById('mapWarningSensors');
-                    mapWarningSensors.classList.remove('flash-border');
-                }
+            function stopFlashing() {
+                clearInterval(flashingInterval);
+                var sensorMaps = document.getElementById('sensorMaps');
+                sensorMaps.classList.remove('flash-border');
+            }
 
-                var modal = $('#fullscreenModal');
-                var mapSensor = L.map('mapWarningSensors').setView([-5.1103816, 119.5018569], 13);
+            var mapSensor = L.map('sensorMaps').setView([-5.1103816, 119.5018569], 13);
 
-                var fetchingData = true;
-                let intervalId;
-                console.log(fetchingData);
-                modal.on('hidden.bs.modal', function() {
-                    stopFlashing();
-                    intervalId = setInterval(fetchStatusSensors, 5000);
-                    fetchingData = true;
-                    if (mapSensor) {
-                        mapSensor = null;
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(mapSensor);
+
+            function clearMarkers(mapSensor) {
+                mapSensor.eachLayer(function(layer) {
+                    if (layer instanceof L.Marker) {
+                        mapSensor.removeLayer(layer);
                     }
                 });
+            }
 
-                modal.on('shown.bs.modal', function() {
-                    startFlashing();
-                    mapSensor.invalidateSize();
-                    fetchingData = false;
+            function fetchAndDisplayMarkersSensor() {
+                fetch('/sensor_locations', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // clearMarkers(mapSensor);
+                        tampilkanMarker(data.data, 'sensor', mapSensor);
+                        console.log(data.data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            fetchAndDisplayMarkersSensor()
+
+            function fetchAndDisplayMarkersDamkar() {
+                fetch('/posko/damkar_location')
+                    .then(response => response.json())
+                    .then(data => {
+                        // clearMarkers(mapDamkar);
+
+                        console.log(data.data);
+                        tampilkanMarker(data.data, 'damkar', mapSensor);
+                        console.log(data.data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            fetchAndDisplayMarkersDamkar();
+
+            function tampilkanMarker(locations, iconColor, map) {
+                locations.forEach(location => {
+                    var latitude = location.latitude;
+                    var longitude = location.longitude;
+                    var nama = location.nama;
+                    // Mengecek apakah nilai dari location.nama mengandung kata "Sensor"
+                    if (/Damkar/i.test(nama)) {
+                        var customIcon = new L.Icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        })
+                    } else {
+                        var customIcon = new L.Icon({
+                            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowSize: [41, 41]
+                        })
+                    }
+
+                    L.marker([latitude, longitude], {
+                            icon: customIcon
+                        })
+                        .addTo(map)
+                        .bindPopup(nama, {
+                            closeButton: false,
+                            closeOnClick: false,
+                            autoClose: false,
+                        })
+                        .openPopup();
                 });
+            }
+
+            function fetchStatusSensors() {
+                fetch('/data_monitoring')
+                    .then(response => response.json())
+                    .then(data => {
+                        // console.log(data);
+                        const damkarLatitude = data.damkar_location[0].latitude;
+                        const damkarLongitude = data.damkar_location[0].longitude;
+                        const namaDamkar = data.damkar_location[0].nama;
+
+                        const latitude = data.data_sensor[0].latitude;
+                        const longitude = data.data_sensor[0].longitude;
+                        const nama = data.data_sensor[0].nama;
 
 
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        var statusSensor = data.data_sensor.find(item => item.status === "1");
+
+                        if (statusSensor) {
+                            console.log("Sensor with status 1 found!");
+                            startFlashing()
+                            clearMarkers(mapSensor);
+                            clearInterval(intervalId); // hetikan fetch data
+
+                            displayWarningMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
+                                damkarLongitude);
+
+                        } else {
+                            console.log("No sensor with status 1 found.");
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            intervalId = setInterval(fetchStatusSensors, 5000);
+
+            function displayWarningMarkersSensors(latitude, longitude, nama, iconColor, mapSensor, damkarLatitude,
+                damkarLongitude) {
+
+
+
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapSensor);
 
-                function fetchStatusSensors() {
+                const namaDamkar = "Posko Damkar"
 
-                    if (!fetchingData) {
-                        return;
+                L.marker([damkarLatitude, damkarLongitude])
+                    .addTo(mapSensor)
+                // .bindPopup(namaDamkar, {
+                //     closeButton: false,
+                //     closeOnClick: false,
+                //     autoClose: false,
+                // })
+                // .openPopup();
+
+                var pulsingIcon = L.icon.pulse({
+                    iconSize: [14, 14],
+                    color: 'red'
+                });
+
+                var waypoints = [
+                    L.latLng(damkarLatitude, damkarLongitude), // Koordinat Titik A
+                    L.latLng(latitude, longitude) // Koordinat Titik  B
+                ];
+
+                var control = L.Routing.control({
+                    waypoints: waypoints,
+                    createMarker: function(i, waypoint, n) {
+                        if (i === n - 1) {
+                            return L.marker(waypoint.latLng, {
+                                icon: pulsingIcon
+                            });
+                        }
+                    },
+                    routeWhileDragging: true,
+                    show: false,
+                    showAlternatives: true, // Menunjukkan jalur alternatif
+
+                    altLineOptions: {
+                        styles: [{
+                            color: 'green',
+                            opacity: 0.6,
+                            weight: 4
+                        }]
                     }
+                }).addTo(mapSensor)
 
-                    fetch('/monitoring')
-                        .then(response => response.json())
-                        .then(data => {
-                            // const damkarLatitude = data.location[0].latitude;
-                            // const damkarLongitude = data.location[0].longitude;
-                            // var sensorWithStatusOne = data.data.find(item => item.status === '1');
+                // Menanggapi perubahan pada waypoints dan menyesuaikan tampilan peta
+                control.on('waypointschanged', function(event) {
+                    var newWaypoints = event.waypoints.map(function(wp) {
+                        return wp.latLng;
+                    });
+                    // Menyesuaikan tampilan peta agar mencakup semua marker dan waypoints yang baru
+                    mapSensor.fitBounds(L.latLngBounds(newWaypoints));
+                });
 
-                            // if (sensorWithStatusOne) {
-                            //     modal.modal('show');
+                // var distance;
+                // control.on('routesfound', function(event) {
+                //     var route = event.routes[0]; // Mengambil rute pertama (biasanya rute utama)
+                //     distance = route.summary.totalDistance; // Mengisi variabel distance dengan nilai jarak
+                // });
 
-                            //     var latitude = sensorWithStatusOne.latitude;
-                            //     var longitude = sensorWithStatusOne.longitude;
-                            //     var nama = sensorWithStatusOne.nama;
-
-                            //     displayMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
-                            //         damkarLongitude);
-
-                            //     clearInterval(intervalId);
-                            // }
-                            console.log(data.data);
-                        })
-                        .catch(error => console.error('Error fetching data:', error));
-                }
-
-                intervalId = setInterval(fetchStatusSensors, 5000);
-
-                function displayMarkersSensors(latitude, longitude, nama, iconColor, mapSensor, damkarLatitude,
-                    damkarLongitude) {
-
-                    var sensorInfoContent = `
+                var sensorInfoContent = `
                         <div class="card m-0" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
                             <div class="card-body ">
                                 <h4 class="card-title">Sensor Information  </h4>
@@ -180,52 +277,52 @@
                                         <p class="card-text mb-1">Api terdeteksi </p>
                                     </div>
                                 </div>
-                            
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="card-text mb-1"><strong>Jarak </strong> </p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text mb-1"> <span id="distanceValue"> </span></p>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-danger">Tangani</button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button class="btn btn-success">Selesai</button>
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
 
-                    $('#mapWarningSensors').prepend(sensorInfoContent);
+                $('#sensorMaps').prepend(sensorInfoContent);
 
-                    var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap contributors'
-                    }).addTo(mapSensor);
+                $('.btn-danger').on('click', function() {
+                    alert('Tombol Tangani diklik!');
+                });
 
-                    L.marker([damkarLatitude, damkarLongitude])
-                        .addTo(mapSensor)
-
-                    var pulsingIcon = L.icon.pulse({
-                        iconSize: [14, 14],
-                        color: 'red'
-                    });
-
-                    var control = L.Routing.control({
-                        waypoints: [
-                            L.latLng(damkarLatitude, damkarLongitude), // Koordinat Titik A
-                            L.latLng(latitude, longitude) // Koordinat Titik B
-                        ],
-                        routeWhileDragging: true,
-                        createMarker: function(i, waypoint, n) {
-                            if (i === n - 1) {
-                                return L.marker(waypoint.latLng, {
-                                    icon: pulsingIcon
-                                });
-                            }
-                        },
-                        show: false
-                    }).addTo(mapSensor);
+                $('.btn-success').on('click', function() {
+                    alert('Tombol Selesai diklik!');
+                });
 
 
-                    var marker = L.marker([latitude, longitude], {
-                            icon: pulsingIcon
-                        })
-                        .addTo(mapSensor)
+                control.on('routesfound', function(event) {
+                    var route = event.routes[0];
+                    var distanceInMeters = route.summary.totalDistance;
 
-                    mapSensor.invalidateSize();
-                }
+                    // Konversi nilai jarak ke kilometer
+                    var distanceInKilometers = distanceInMeters / 1000;
 
+                    // Menampilkan nilai jarak pada elemen dengan id 'distanceValue'
+                    $('#distanceValue').text(distanceInKilometers.toFixed(2) + ' Km'); // Menampilkan 2 angka desimal
+                });
 
-            });
+            }
         </script>
     @endpush
 @endsection

@@ -56,6 +56,14 @@ class DataDamkarController extends Controller
         return response()->json(['status' => true, 'data' => $dataSensor], 200);
     }
 
+    public function poskoDamkarLocation(DataDamkar $dataSensor)
+    {
+        $id_user = auth()->user()->id;
+        $location = DataDamkar::where('id_damkar', $id_user)->get(['latitude', 'longitude', 'nama']);
+        return response()->json(['status' => true, 'data' => $location], 200);
+    }
+
+
     /**
      * Display the specified resource.
      */

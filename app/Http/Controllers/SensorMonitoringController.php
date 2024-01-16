@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class SensorMonitoringController extends Controller
 {
-    public function monitoring()
+    public function data_monitoring()
     {
         $statusSensors = SensorMonitoring::all();
         $sensors = [];
@@ -39,14 +39,14 @@ class SensorMonitoringController extends Controller
         $dataSensor = DataSensor::whereIn('kode_sensor', $apiKeys)->get(['nama', 'status', 'latitude', 'longitude']);
 
         $id_user = auth()->user()->id;
-        $location = DataDamkar::where('id_damkar', $id_user)->get(['latitude', 'longitude']);
+        $location = DataDamkar::where('id_damkar', $id_user)->get(['latitude', 'longitude', 'nama']);
 
-        return response()->json(['data' => $dataSensor, 'location' => $location, 'sensors' => $sensors], 200);
+        return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $location, 'status_sensor' => $sensors], 200);
     }
 
     public function index()
     {
-        //
+        return view('monitoring.index');
     }
 
     /**

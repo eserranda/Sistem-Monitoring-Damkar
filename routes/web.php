@@ -34,7 +34,8 @@ Route::get('/register', function () {
 
 
 Route::controller(SensorMonitoringController::class)->group(function () {
-    Route::get('/monitoring', 'monitoring')->name("monitoring.data");
+    Route::get('/monitoring', 'index')->name("monitoring.data");
+    Route::get('/data_monitoring', 'data_monitoring')->name("data_monitoring.data");
 });
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {
@@ -80,6 +81,7 @@ Route::controller(RealTimeDataSensor::class)->group(function () {
 Route::controller(DataDamkarController::class)->group(function () {
     Route::get('/damkar', 'index')->name("damkar.index")->middleware('auth');;
     Route::get('/damkar_locations', 'damkarLocations')->name("damkar_locations.data");
+    Route::get('/posko/damkar_location', 'poskoDamkarLocation')->name("posko_damkar_location.data");
     Route::get('/add_damkar', 'create')->name("damkar.create")->middleware('auth');
     Route::get('/edit_damkar/{id}', 'show')->name("damkar.show")->middleware('auth');
     Route::POST('/update_damkar', 'update')->name("damkar.update")->middleware('auth');
