@@ -94,7 +94,7 @@
                     .then(data => {
                         // clearMarkers(mapSensor);
                         tampilkanMarker(data.data, 'sensor', mapSensor);
-                        console.log(data.data);
+                        // console.log(data.data);
                     })
                     .catch(error => console.error('Error fetching data:', error));
             }
@@ -107,9 +107,9 @@
                     .then(data => {
                         // clearMarkers(mapDamkar);
 
-                        console.log(data.data);
+                        // console.log(data.data);
                         tampilkanMarker(data.data, 'damkar', mapSensor);
-                        console.log(data.data);
+                        // console.log(data.data);
                     })
                     .catch(error => console.error('Error fetching data:', error));
             }
@@ -168,6 +168,19 @@
                         const longitude = data.data_sensor[0].longitude;
                         const nama = data.data_sensor[0].nama;
 
+                        const keterangan = data.status_sensor[0]
+
+                        const key = Object.keys(keterangan)[0];
+                        // const value = keterangan[key];
+                        if (key === "sensor_api") {
+                            keterangan[key] = "Api Terdeteksi";
+                        } else if (key === "sensor_gas") {
+                            keterangan[key] = "Gas Terdeteksi";
+                        } else if (key === "sensor_asap") {
+                            keterangan[key] = "Asap Terdeteksi";
+                        }
+
+                        keteranganSensor = keterangan[key];
 
                         var statusSensor = data.data_sensor.find(item => item.status === "1");
 
@@ -177,7 +190,8 @@
                             clearMarkers(mapSensor);
                             clearInterval(intervalId); // hetikan fetch data
 
-                            displayWarningMarkersSensors(latitude, longitude, nama, 'red', mapSensor, damkarLatitude,
+                            displayWarningMarkersSensors(latitude, longitude, keteranganSensor, nama, 'red', mapSensor,
+                                damkarLatitude,
                                 damkarLongitude);
 
                         } else {
@@ -189,10 +203,8 @@
 
             intervalId = setInterval(fetchStatusSensors, 5000);
 
-            function displayWarningMarkersSensors(latitude, longitude, nama, iconColor, mapSensor, damkarLatitude,
-                damkarLongitude) {
-
-
+            function displayWarningMarkersSensors(latitude, longitude, keteranganSensor, nama, iconColor, mapSensor,
+                damkarLatitude, damkarLongitude) {
 
                 var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
@@ -250,12 +262,6 @@
                     mapSensor.fitBounds(L.latLngBounds(newWaypoints));
                 });
 
-                // var distance;
-                // control.on('routesfound', function(event) {
-                //     var route = event.routes[0]; // Mengambil rute pertama (biasanya rute utama)
-                //     distance = route.summary.totalDistance; // Mengisi variabel distance dengan nilai jarak
-                // });
-
                 var sensorInfoContent = `
                         <div class="card m-0" style="position: absolute; top: 10px; right: 10px; z-index: 1000;">
                             <div class="card-body ">
@@ -274,7 +280,7 @@
                                         <p class="card-text mb-1"><strong>Keterangan </strong> </p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p class="card-text mb-1">Api terdeteksi </p>
+                                        <p class="card-text mb-1"><strong> ${keteranganSensor} </strong></p>
                                     </div>
                                 </div>
 
