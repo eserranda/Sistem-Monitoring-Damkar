@@ -36,6 +36,8 @@ class SensorMonitoringController extends Controller
             }
         }
 
+        DataSensor::whereIn('kode_sensor', $apiKeys)->update(['status' => 1]);
+
         $dataSensor = DataSensor::whereIn('kode_sensor', $apiKeys)->get(['nama', 'status', 'latitude', 'longitude']);
 
         $id_user = auth()->user()->id;

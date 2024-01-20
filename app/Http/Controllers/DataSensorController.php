@@ -52,10 +52,12 @@ class DataSensorController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(DataSensor $dataSensor)
+    public function show(DataSensor $dataSensor, $id)
     {
-        //
+        $dataSensor = $dataSensor->find($id);
+        return view('sensor.edit', compact('dataSensor', 'dataSensor'));
     }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -84,7 +86,31 @@ class DataSensorController extends Controller
      */
     public function update(Request $request, DataSensor $dataSensor)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'kode_sensor' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'tempat_sensor' => 'required',
+            'alamat' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
+        }
+
+        $request->merge(['nama' => $request->input('kode_sensor')]);
+        $request->merge(['tipe_marker' => 'sensor']);
+
+        $dataSensor->where('id', $request->id)->update([
+            'kode_sensor' => $request->kode_sensor,
+            'nama' => $request->nama,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'tempat_sensor' => $request->tempat_sensor,
+            'alamat' => $request->alamat,
+        ]);
+
+        return response()->json(['success' => true], 201);
     }
 
     /**

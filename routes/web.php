@@ -48,6 +48,8 @@ Route::prefix('akun')->controller(UserController::class)->group(function () {
 Route::controller(DataSensorController::class)->group(function () {
     Route::get('/sensor', 'index')->name("sensor.index")->middleware('auth');
     Route::get('/add_sensor', 'create')->middleware('auth');
+    Route::get('/edit_sensor/{id}', 'show')->name("edit.show")->middleware('auth');
+    Route::POST('/update_sensor', 'update')->name("sensor.update")->middleware('auth');
     Route::get('/sensor_locations', 'sensorLocations')->name("sensor_locations.data");
     // Route::get('/status_sensors', 'statusSensors')->name("status_sensors.data");
     Route::POST('/sensor_store', 'store')->name("sensor.store")->middleware('auth');
