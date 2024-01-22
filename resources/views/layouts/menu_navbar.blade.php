@@ -28,12 +28,14 @@
                     <div data-i18n="Data Damkar">Data Damkar</div>
                 </a>
             </li>
-            <li class="menu-item {{ Request::is('akun*', 'add_akun') ? 'active show' : '' }}">
-                <a href="{{ route('akun') }}" class="menu-link">
-                    <i class="menu-icon tf-icons ti ti-user-circle"></i>
-                    <div data-i18n="Akun">Akun</div>
-                </a>
-            </li>
+            @if (Auth::check() && Auth::user()->role == 'super_admin')
+                <li class="menu-item {{ Request::is('akun*') || Request::is('add_akun') ? 'active show' : '' }}">
+                    <a href="{{ route('akun') }}" class="menu-link">
+                        <i class="menu-icon tf-icons ti ti-user-circle"></i>
+                        <div data-i18n="Akun">Akun</div>
+                    </a>
+                </li>
+            @endif
         </ul>
     </div>
 </aside>
