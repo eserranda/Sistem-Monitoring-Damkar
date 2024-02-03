@@ -10,6 +10,21 @@ use Illuminate\Support\Facades\Auth;
 
 class SensorMonitoringController extends Controller
 {
+    protected  function haversine($lat1, $lon1, $lat2, $lon2)
+    {
+        $R = 6371; // Radius bumi dalam kilometer
+
+        $dlat = deg2rad($lat2 - $lat1);
+        $dlon = deg2rad($lon2 - $lon1);
+
+        $a = sin($dlat / 2) * sin($dlat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dlon / 2) * sin($dlon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        $distance = $R * $c; // Jarak dalam kilometer
+
+        return $distance;
+    }
+
     public function data_monitoring()
     {
         $statusSensors = SensorMonitoring::all();
@@ -41,7 +56,36 @@ class SensorMonitoringController extends Controller
         $dataSensor = DataSensor::whereIn('kode_sensor', $apiKeys)->get(['nama', 'status', 'latitude', 'longitude']);
 
         $id_user = auth()->user()->id;
-        $location = DataDamkar::where('id_damkar', $id_user)->get(['latitude', 'longitude', 'nama']);
+        $location = DataDamkar::where([
+            'id_damkar' => $id_user,
+            'status' => 0
+        ])->get(['latitude', 'longitude', 'nama']);
+
+        // cari damkar terdekat
+        $latitudeSensor = $dataSensor->pluck('latitude')->toArray();
+        $longitudeSensor = $dataSensor->pluck('longitude')->toArray();
+
+        $damkars = DataDamkar::all(['id_damkar', 'latitude', 'longitude']);
+
+        $minDistance = PHP_INT_MAX;
+        $nearestDamkarId = null;
+
+        foreach ($damkars as $damkar) {
+            $distance = $this->haversine($latitudeSensor[0], $longitudeSensor[0], $damkar->latitude, $damkar->longitude);
+
+            if ($distance < $minDistance) {
+                $minDistance = $distance;
+                $nearestDamkarId = $damkar->id_damkar;
+            }
+        }
+
+        if ($nearestDamkarId !== null) {
+            $nearestDamkar = $nearestDamkarId;
+        }
+
+        $tes = DataDamkar::where('id_damkar', $nearestDamkarId)->first();
+        dd($tes);
+        //end rumus mencari damkar terdekat
 
         return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $location, 'status_sensor' => $sensors], 200);
     }

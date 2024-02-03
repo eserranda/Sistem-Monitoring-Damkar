@@ -78,8 +78,6 @@ Route::controller(RealTimeDataSensor::class)->group(function () {
 //     Route::get('/get-sensor-locations', 'getSensorLocations')->name("get-sensor-locations.data");
 // });
 
-
-
 Route::controller(DataDamkarController::class)->group(function () {
     Route::get('/damkar', 'index')->name("damkar.index")->middleware('auth');;
     Route::get('/damkar_locations', 'damkarLocations')->name("damkar_locations.data");
