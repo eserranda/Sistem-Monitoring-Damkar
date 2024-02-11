@@ -16,6 +16,7 @@ class DataDamkar extends Model
         'latitude',
         'longitude',
         'alamat',
+        'status',
     ];
 
     function damkar(): BelongsTo

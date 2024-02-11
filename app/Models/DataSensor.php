@@ -16,5 +16,6 @@ class DataSensor extends Model
         'longitude',
         'tempat_sensor',
         'alamat',
+        'status',
     ];
 }

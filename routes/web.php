@@ -36,6 +36,8 @@ Route::get('/register', function () {
 Route::controller(SensorMonitoringController::class)->group(function () {
     Route::get('/monitoring', 'index')->name("monitoring.data");
     Route::get('/data_monitoring', 'data_monitoring')->name("data_monitoring.data");
+    Route::POST('/reset_nilai_sensor', 'resetNilai')->name("reset.nilai_sensor")->middleware('auth');
+    Route::POST('/reset_status_sensor', 'resetStatus')->name("reset.status_sensor")->middleware('auth');
 });
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {

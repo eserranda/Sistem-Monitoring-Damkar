@@ -44,6 +44,25 @@
             border-radius: 5px;
             z-index: 1000;
         }
+
+        /* blinking teks*/
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .blinking {
+            animation: blink 1s infinite;
+        }
     </style>
 
     <div class="col-12 my-3">
@@ -160,9 +179,9 @@
                     .then(response => response.json())
                     .then(data => {
                         // console.log(data);
-                        const damkarLatitude = data.damkar_location[0].latitude;
-                        const damkarLongitude = data.damkar_location[0].longitude;
-                        const namaDamkar = data.damkar_location[0].nama;
+                        const damkarLatitude = data.damkar_location.latitude;
+                        const damkarLongitude = data.damkar_location.longitude;
+                        const namaDamkar = data.damkar_location.nama;
 
                         const latitude = data.data_sensor[0].latitude;
                         const longitude = data.data_sensor[0].longitude;
@@ -205,12 +224,15 @@
 
             function displayWarningMarkersSensors(latitude, longitude, keteranganSensor, nama, iconColor, mapSensor,
                 damkarLatitude, damkarLongitude) {
+                // $('#selesai').attr('class', 'disabled');
+                // $('#selesai').attr('disabled', 'disabled');
 
                 var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapSensor);
 
                 const namaDamkar = "Posko Damkar"
+
 
                 L.marker([damkarLatitude, damkarLongitude])
                     .addTo(mapSensor)
@@ -230,6 +252,14 @@
                     L.latLng(damkarLatitude, damkarLongitude), // Koordinat Titik A
                     L.latLng(latitude, longitude) // Koordinat Titik  B
                 ];
+
+                var markerB = L.marker([latitude, longitude], {
+                    icon: L.icon({
+                        iconUrl: '{{ asset('assets') }}/img/icons/flame-icon.svg', // Ganti dengan path gambar ikon yang diinginkan
+                        iconSize: [35, 35], // Sesuaikan ukuran ikon
+                        iconAnchor: [17, 42] // Sesuaikan anchor ikon
+                    })
+                }).addTo(mapSensor);
 
                 var control = L.Routing.control({
                     waypoints: waypoints,
@@ -280,7 +310,7 @@
                                         <p class="card-text mb-1"><strong>Keterangan </strong> </p>
                                     </div>
                                     <div class="col-md-6">
-                                        <p class="card-text mb-1"><strong> ${keteranganSensor} </strong></p>
+                                        <p class="card-text mb-1 text-danger blinking"><strong> ${keteranganSensor} </strong></p>
                                     </div>
                                 </div>
 
@@ -295,11 +325,10 @@
 
                                 <div class="row mt-3">
                                     <div class="col-md-6">
-                                        <button class="btn btn-danger">Tangani</button>
+                                        <button class="btn btn-danger" id="tangani">Tangani</button>
                                     </div>
                                     <div class="col-md-6">
-                                        <button class="btn btn-success">Selesai</button>
-
+                                        <button class="btn btn-success disabled" id="selesai">Selesai</button>
                                     </div>
                                 </div>
                             </div>
@@ -308,12 +337,59 @@
 
                 $('#sensorMaps').prepend(sensorInfoContent);
 
-                $('.btn-danger').on('click', function() {
-                    alert('Tombol Tangani diklik!');
+
+                $('#tangani').on('click', async function() {
+                    try {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        const apiKey = nama;
+                        const response = await fetch('{{ route('reset.nilai_sensor') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', // Tentukan tipe konten
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: JSON.stringify({
+                                apiKey: apiKey
+                            })
+                        });
+                        const data = await response.json();
+                        console.log(data);
+                        if (data.message === 'success') {
+                            $('#tangani').attr('class', 'btn btn-danger disabled');
+                            $('#selesai').attr('class', 'btn btn-success');
+                        }
+                    } catch (error) {
+                        console.error('Terjadi kesalahan:', error);
+                        throw error;
+                    }
                 });
 
-                $('.btn-success').on('click', function() {
-                    alert('Tombol Selesai diklik!');
+                $('#selesai').on('click', async function() {
+                    try {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                        const apiKey = nama;
+                        const damkar = "{{ Auth::user()->name }}";
+                        alert = 'Sudah selesai ' + damkar
+                        const response = await fetch('{{ route('reset.status_sensor') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json', // Tentukan tipe konten
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: JSON.stringify({
+                                apiKey: apiKey,
+                                damkar: damkar
+                            })
+                        });
+                        const data = await response.json();
+                        console.log(data);
+                        if (data.message === 'success') {
+                            window.location.reload();
+                        }
+                    } catch (error) {
+                        console.error('Terjadi kesalahan:', error);
+                        throw error;
+                    }
                 });
 
 
@@ -325,7 +401,8 @@
                     var distanceInKilometers = distanceInMeters / 1000;
 
                     // Menampilkan nilai jarak pada elemen dengan id 'distanceValue'
-                    $('#distanceValue').text(distanceInKilometers.toFixed(2) + ' Km'); // Menampilkan 2 angka desimal
+                    $('#distanceValue').text(distanceInKilometers.toFixed(2) +
+                        ' Km'); // Menampilkan 2 angka desimal
                 });
 
             }
