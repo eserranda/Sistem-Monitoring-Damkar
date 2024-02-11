@@ -5,11 +5,13 @@
         <div class="card-header header-elements">
             <span class="me-2">Data Posko Damkar</span>
 
-            <div class="card-header-elements ms-auto">
-                <a href="/add_damkar" class="btn -bottom-3 btn-primary">
-                    <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add
-                </a>
-            </div>
+            @if (Auth::check() && Auth::user()->role == 'super_admin')
+                <div class="card-header-elements ms-auto">
+                    <a href="/add_damkar" class="btn -bottom-3 btn-primary">
+                        <span class="tf-icon ti ti-plus ti-xs me-1"></span>Add
+                    </a>
+                </div>
+            @endif
         </div>
 
         <div class="card-body">
@@ -38,15 +40,17 @@
                                     <button type="button" class="btn btn-icon btn-outline-secondary">
                                         <span class="ti ti-map-2 text-info"></span>
                                     </button>
+                                    @if (Auth::check() && Auth::user()->role == 'super_admin')
+                                        <a href="/edit_damkar/{{ $row->id }}"
+                                            class="btn btn-icon btn-outline-secondary">
+                                            <span class="ti ti-edit text-warning"></span>
+                                        </a>
 
-                                    <a href="/edit_damkar/{{ $row->id }}" class="btn btn-icon btn-outline-secondary">
-                                        <span class="ti ti-edit text-warning"></span>
-                                    </a>
-
-                                    <button type="button" class="btn btn-icon btn-outline-secondary"
-                                        onclick="hapus({{ $row->id }})">
-                                        <span class="ti ti-trash-x text-danger"></span>
-                                    </button>
+                                        <button type="button" class="btn btn-icon btn-outline-secondary"
+                                            onclick="hapus({{ $row->id }})">
+                                            <span class="ti ti-trash-x text-danger"></span>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
