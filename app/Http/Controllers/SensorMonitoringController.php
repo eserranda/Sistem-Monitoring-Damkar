@@ -53,16 +53,27 @@ class SensorMonitoringController extends Controller
 
         DataSensor::whereIn('kode_sensor', $apiKeys)->update(['status' => 1]);
 
-        $dataSensor = DataSensor::whereIn('kode_sensor', $apiKeys)->get(['nama', 'status', 'latitude', 'longitude']);
+        $dataSensor = DataSensor::where('kode_sensor', $apiKeys)
+            ->where('status', 1)
+            ->get(['nama', 'status', 'latitude', 'longitude']);
         // cari damkar terdekat
         $latitudeSensor = $dataSensor->pluck('latitude')->toArray();
         $longitudeSensor = $dataSensor->pluck('longitude')->toArray();
 
         $damkars = DataDamkar::all(['id_damkar', 'latitude', 'longitude']);
+        // $damkars = DataDamkar::where('status', 0)->get(['id_damkar', 'latitude', 'longitude']);
 
+        // $jumlah_damkar = count($damkars);
+        // dd($jumlah_damkar);
+
+        // if ($jumlah_damkar == 1) {
+        //     $damkars = DataDamkar::where('status', 0)->get(['id_damkar', 'latitude', 'longitude']);
+        //     return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $damkars, 'status_sensor' => $sensors], 200);
+        // } else {
         $minDistance = PHP_INT_MAX;
         $nearestDamkarId = null;
 
+        // $damkars = DataDamkar::where('status', 0)->get(['id_damkar', 'latitude', 'longitude']);
         foreach ($damkars as $damkar) {
             $distance = $this->haversine($latitudeSensor[0], $longitudeSensor[0], $damkar->latitude, $damkar->longitude);
 
@@ -72,12 +83,14 @@ class SensorMonitoringController extends Controller
             }
         }
         $id_user = auth()->user()->id; // id user yang login
-        $location = DataDamkar::where('id_damkar', $nearestDamkarId)->first(['latitude', 'longitude', 'nama']);
+        $location = DataDamkar::where('id_damkar', $nearestDamkarId)->get(['latitude', 'longitude', 'nama']);
+        DataDamkar::where('id_damkar', $nearestDamkarId)->update(['status' => 1]);
         if ($id_user == $nearestDamkarId) {
             return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $location, 'status_sensor' => $sensors], 200);
         } else {
             return response()->json(['status_sensor' => $sensors, 'message' =>   'Telah di tangani oleh ' . $location->nama], 200);
         }
+        // }
         // if (auth()->user()->id == $nearestDamkarId) {
         //     dd("data sama");
         // } else {

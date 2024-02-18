@@ -65,6 +65,8 @@
         }
     </style>
 
+    <audio id="alarm" src="{{ asset('assets') }}/audio/alarm.mp3"></audio>
+
     <div class="col-12 my-3">
         <h3 class="text-center  ">Sistem Monitoring Kebakaran <b>{{ Auth::user()->name }}</b></h3>
         <div class="card">
@@ -74,6 +76,25 @@
 
     @push('script')
         <script>
+            var alarm = document.getElementById("alarm");
+
+            function stopAudio() {
+                alarm.stop();
+            }
+
+            function playAudio() {
+                alarm.play();
+            }
+
+            function pauseAudio() {
+                alarm.pause();
+            }
+
+            function stopAudio() {
+                alarm.pause();
+                alarm.currentTime = 0;
+            }
+
             var flashingInterval;
 
             function startFlashing() {
@@ -178,10 +199,13 @@
                 fetch('/data_monitoring')
                     .then(response => response.json())
                     .then(data => {
-                        // console.log(data);
-                        const damkarLatitude = data.damkar_location.latitude;
-                        const damkarLongitude = data.damkar_location.longitude;
-                        const namaDamkar = data.damkar_location.nama;
+                        console.log(data);
+                        // const damkarLatitude = data.damkar_location.latitude;
+                        // const damkarLongitude = data.damkar_location.longitude;
+                        // const namaDamkar = data.damkar_location.nama;
+                        const damkarLatitude = data.damkar_location[0].latitude;
+                        const damkarLongitude = data.damkar_location[0].longitude;
+                        const namaDamkar = data.damkar_location[0].nama;
 
                         const latitude = data.data_sensor[0].latitude;
                         const longitude = data.data_sensor[0].longitude;
@@ -205,6 +229,7 @@
 
                         if (statusSensor) {
                             console.log("Sensor with status 1 found!");
+                            alarm.play();
                             startFlashing()
                             clearMarkers(mapSensor);
                             clearInterval(intervalId); // hetikan fetch data
@@ -339,6 +364,8 @@
 
 
                 $('#tangani').on('click', async function() {
+                    alarm.pause();
+                    alarm.currentTime = 0;
                     try {
                         const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                         const apiKey = nama;
@@ -404,7 +431,6 @@
                     $('#distanceValue').text(distanceInKilometers.toFixed(2) +
                         ' Km'); // Menampilkan 2 angka desimal
                 });
-
             }
         </script>
     @endpush
