@@ -87,14 +87,14 @@
                 <div class="modal-body">
                     <div class="row g-2">
                         <div class="col-md-10 mb-0">
-                            <label for="emailLarge" class="form-label">Posko Damkar tersedia</label>
+                            <label for="emailLarge" class="form-label">Posko Damkar Yang Tersedia</label>
                             <select class="form-select" id="posko_damkar" name="posko_damkar" required>
                                 <option value="" selected disabled>- Pilih Posko -</option>
-                                <option value="Rumah">Posko Damkar BTP</option>
+
                             </select>
                         </div>
                         <div class="col mb-0">
-                            <button type="button" class="btn btn-primary my-4">OK</button>
+                            <button type="button" class="btn btn-primary my-4 " id="send">OK</button>
                         </div>
                     </div>
                 </div>
@@ -240,7 +240,10 @@
 
                         const latitude = data.data_sensor[0].latitude;
                         const longitude = data.data_sensor[0].longitude;
-                        const nama = data.data_sensor[0].nama;
+                        var nama = data.data_sensor[0].nama;
+                        if (nama === "") {
+                            nama = "Posko Damkar";
+                        }
 
                         const keterangan = data.status_sensor[0]
 
@@ -266,8 +269,7 @@
                             clearInterval(intervalId); // hetikan fetch data
 
                             displayWarningMarkersSensors(latitude, longitude, keteranganSensor, nama, 'red', mapSensor,
-                                damkarLatitude,
-                                damkarLongitude);
+                                damkarLatitude, damkarLongitude);
 
                         } else {
                             console.log("No sensor with status 1 found.");
@@ -400,69 +402,96 @@
 
                 var id = {{ Auth::user()->id }}
                 $('#help').on('click', async function() {
-                    // fetch('/helper/' + id, {
-                    //     method: 'GET',
-                    // })
-                    // .then(response => {
-                    //     if (!response.ok) {
-                    //         throw new Error('Gagal mengambil data siswa');
-                    //     }
-                    //     return response.json();
-                    // })
-                    // .then(data => {
-                    //     console.log(data)
-                    // const form = document.getElementById('form_edit_data');
-                    // form.elements['edit_id'].value = data.data.id;
-                    // form.elements['edit_nama_kelas'].value = data.data.nama_kelas;
-                    // form.elements['edit_id_guru'].value = data.data.id_guru;
+                    fetch('/helper/' + id, {
+                            method: 'GET',
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Gagal mengambil data siswa');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log(data)
+                            $('#posko_damkar').empty();
 
-                    // // Setel nilai langsung pada elemen <select>
-                    // var editIdPengajarSelect = document.getElementById('edit_id_guru');
-                    // fetch('/data_guru/getID/' + data.data.id_guru, {
-                    //         method: 'GET',
-                    //     })
-                    //     .then(response => {
-                    //         if (!response.ok) {
-                    //             throw new Error('Gagal mengambil data tambahan');
-                    //         }
-                    //         return response.json();
-                    //     })
-                    //     .then(data => {
-                    //         updateOptionsAndSelect2Guru(editIdPengajasrSelect, data.data.id, data
-                    //             .data.nama);
-                    //     });
+                            data.data.forEach(item => {
+                                $('#posko_damkar').append(
+                                    `<option value="${item.id}">${item.nama}</option>`
+                                );
+                            });
 
+                            $('#largeModal').modal('show');
+                            $('#send').on('click', async function() {
+                                var selectedItemId = $('#posko_damkar').val();
+                                if (selectedItemId) {
+                                    try {
+                                        const response = await fetch('/damkarSelected/' +
+                                            selectedItemId, {
+                                                method: 'GET',
+                                            });
 
-                    // })
-                    $('#largeModal').modal('show');
+                                        if (!response.ok) {
+                                            throw new Error(
+                                                'Gagal mengambil data dengan ID yang dipilih');
+                                        }
+
+                                        const data = await response.json();
+                                        if (response.status) {
+                                            $('#largeModal').modal('hide');
+                                            Swal.fire(
+                                                'Berhasil!',
+                                                'Meminta bantuan berhasil.',
+                                                'success'
+                                            );
+                                        } else {
+                                            Swal.fire(
+                                                'Gagal!',
+                                                'Terjadi kesalahan .',
+                                                'error'
+                                            );
+                                        }
+
+                                    } catch (error) {
+                                        console.error('Error:', error);
+
+                                    }
+                                } else {
+                                    alert("Silakan pilih posko terlebih dahulu.");
+                                }
+                            });
+                        })
                 })
 
                 $('#tangani').on('click', async function() {
                     alarm.pause();
                     alarm.currentTime = 0;
-                    try {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-                        const apiKey = nama;
-                        const response = await fetch('{{ route('reset.nilai_sensor') }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json', // Tentukan tipe konten
-                                'X-CSRF-TOKEN': csrfToken
-                            },
-                            body: JSON.stringify({
-                                apiKey: apiKey
-                            })
-                        });
-                        const data = await response.json();
-                        console.log(data);
-                        if (data.message === 'success') {
-                            $('#tangani').attr('class', 'btn btn-danger disabled');
-                            $('#selesai').attr('class', 'btn btn-success');
-                        }
-                    } catch (error) {
-                        console.error('Terjadi kesalahan:', error);
-                        throw error;
-                    }
+                    $('#tangani').attr('class', 'btn btn-danger disabled');
+                    $('#selesai').attr('class', 'btn btn-success');
+
+                    // try {
+                    //     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    //     const apiKey = nama;
+                    //     const response = await fetch('{{ route('reset.nilai_sensor') }}', {
+                    //         method: 'POST',
+                    //         headers: {
+                    //             'Content-Type': 'application/json', // Tentukan tipe konten
+                    //             'X-CSRF-TOKEN': csrfToken
+                    //         },
+                    //         body: JSON.stringify({
+                    //             apiKey: apiKey
+                    //         })
+                    //     });
+                    //     const data = await response.json();
+                    //     console.log(data);
+                    //     if (data.message === 'success') {
+                    //         $('#tangani').attr('class', 'btn btn-danger disabled');
+                    //         $('#selesai').attr('class', 'btn btn-success');
+                    //     }
+                    // } catch (error) {
+                    //     console.error('Terjadi kesalahan:', error);
+                    //     throw error;
+                    // }
                 });
 
                 $('#selesai').on('click', async function() {

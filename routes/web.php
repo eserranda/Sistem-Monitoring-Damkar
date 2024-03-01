@@ -44,7 +44,8 @@ Route::controller(SensorMonitoringController::class)->group(function () {
     Route::get('/data_monitoring', 'data_monitoring')->name("data_monitoring.data");
     Route::POST('/reset_nilai_sensor', 'resetNilai')->name("reset.nilai_sensor")->middleware('auth');
     Route::POST('/reset_status_sensor', 'resetStatus')->name("reset.status_sensor")->middleware('auth');
-    Route::POST('/helper', 'helper')->name("helper")->middleware('auth');
+    Route::get('/helper/{id}', 'helper')->name("helper")->middleware('auth');
+    Route::get('/damkarSelected/{id}', 'damkarSelected')->name("damkarSelected")->middleware('auth');
 });
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {
