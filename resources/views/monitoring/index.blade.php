@@ -67,6 +67,8 @@
 
     <audio id="alarm" src="{{ asset('assets') }}/audio/alarm.mp3"></audio>
 
+
+
     <div class="col-12 my-3">
         <h3 class="text-center  ">Sistem Monitoring Kebakaran <b>{{ Auth::user()->name }}</b></h3>
         <div class="card">
@@ -74,6 +76,35 @@
         </div>
     </div>
 
+
+    <div class="modal fade" id="largeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Permintaan Bantuan Pemadaman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2">
+                        <div class="col-md-10 mb-0">
+                            <label for="emailLarge" class="form-label">Posko Damkar tersedia</label>
+                            <select class="form-select" id="posko_damkar" name="posko_damkar" required>
+                                <option value="" selected disabled>- Pilih Posko -</option>
+                                <option value="Rumah">Posko Damkar BTP</option>
+                            </select>
+                        </div>
+                        <div class="col mb-0">
+                            <button type="button" class="btn btn-primary my-4">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#largeModal">
+        Default
+    </button> --}}
     @push('script')
         <script>
             var alarm = document.getElementById("alarm");
@@ -356,12 +387,55 @@
                                         <button class="btn btn-success disabled" id="selesai">Selesai</button>
                                     </div>
                                 </div>
+                                <div class="row mt-3">
+                                    <div class="col-md-6">
+                                        <button class="btn btn-warning" id="help">Bantuan</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     `;
 
                 $('#sensorMaps').prepend(sensorInfoContent);
 
+                var id = {{ Auth::user()->id }}
+                $('#help').on('click', async function() {
+                    // fetch('/helper/' + id, {
+                    //     method: 'GET',
+                    // })
+                    // .then(response => {
+                    //     if (!response.ok) {
+                    //         throw new Error('Gagal mengambil data siswa');
+                    //     }
+                    //     return response.json();
+                    // })
+                    // .then(data => {
+                    //     console.log(data)
+                    // const form = document.getElementById('form_edit_data');
+                    // form.elements['edit_id'].value = data.data.id;
+                    // form.elements['edit_nama_kelas'].value = data.data.nama_kelas;
+                    // form.elements['edit_id_guru'].value = data.data.id_guru;
+
+                    // // Setel nilai langsung pada elemen <select>
+                    // var editIdPengajarSelect = document.getElementById('edit_id_guru');
+                    // fetch('/data_guru/getID/' + data.data.id_guru, {
+                    //         method: 'GET',
+                    //     })
+                    //     .then(response => {
+                    //         if (!response.ok) {
+                    //             throw new Error('Gagal mengambil data tambahan');
+                    //         }
+                    //         return response.json();
+                    //     })
+                    //     .then(data => {
+                    //         updateOptionsAndSelect2Guru(editIdPengajasrSelect, data.data.id, data
+                    //             .data.nama);
+                    //     });
+
+
+                    // })
+                    $('#largeModal').modal('show');
+                })
 
                 $('#tangani').on('click', async function() {
                     alarm.pause();

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\EspStatusController;
+use App\Http\Controllers\LocationTmpController;
 use App\Http\Controllers\SensorMonitoringController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +29,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(SensorMonitoringController::class)->group(function () {
     Route::post('/data', 'update')->name("sensor.update");
+});
 
-    // Route::get('/monitoring', 'monitoring')->name("monitoring.data");
+Route::controller(LocationTmpController::class)->group(function () {
+    Route::post('/esp-mode', 'mode');
+    Route::post('/save-loc', 'saveLoc');
+    Route::post('/update-mode', 'updateMode');
+    Route::get('/get-location', 'getLoc');
 });

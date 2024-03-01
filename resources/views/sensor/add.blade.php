@@ -17,11 +17,45 @@
                 <h5 class="card-header">Tambah Data Sensor</h5>
                 <div class="card-body">
                     <form action="" method="POST" id="form_data_sensor" novalidate>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label" for="bs-validation-name">Kode Sensor</label>
                             <input type="text" class="form-control" id="kode_sensor" name="kode_sensor"
-                                placeholder="Kode Sensor" required />
+                                placeholder="Kode Sensor" required oninput="enableRadio()" />
                             <div class="invalid-feedback"> </div>
+                        </div> --}}
+
+                        <div class="mb-3">
+                            <label class="form-label" for="form-repeater-1-3">Kode Sensor</label>
+                            <select class="form-select" id="kode_sensor" name="kode_sensor" onchange="enableRadio()"
+                                required>
+                                <option value="">- Kode Sensor -</option>
+                                <option value="Sensor01">Sensor01</option>
+                                <option value="Sensor02">Sensor02</option>
+                            </select>
+                            <div class="invalid-feedback"> </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="row row-bordered g-0">
+
+                                <div class="form-check">
+                                    <input name="mode" class="form-check-input" type="radio" value="myLocation"
+                                        id="defaultRadio3" disabled />
+                                    <label class="form-check-label" for="defaultRadio2"> Lokasi Saat Ini </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input name="mode" class="form-check-input" type="radio" value="gps"
+                                        id="defaultRadio2" onchange="updateDatabaseAndSetMode('gps')" disabled />
+                                    <label class="form-check-label" for="defaultRadio2"> GPS </label>
+                                </div>
+
+                                <div class="form-check mb-2">
+                                    <input name="mode" class="form-check-input" type="radio" value="manual"
+                                        id="defaultRadio1" onchange="updateDatabaseAndSetMode('manual')" disabled />
+                                    <label class="form-check-label" for="defaultRadio1"> Manual </label>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="row">
@@ -36,26 +70,17 @@
                                 <input type="text" id="longitude" name="longitude" class="form-control"
                                     placeholder="Longitude" value=" 119.50185691687646" required />
                             </div>
-                            {{-- <div class="mb-3 col-lg-5 mb-0">
-                                <label class="form-label" for="">Latitude</label>
-                                <input type="text" id="latitude" name="latitude" class="form-control"
-                                    placeholder="Latitude" required />
-                                <div class="invalid-feedback"> </div>
-
-                            </div>
-
-                            <div class="mb-3 col-lg-5 mb-0">
-                                <label class="form-label" for="">Longitude</label>
-                                <input type="text" id="longitude" name="longitude" class="form-control"
-                                    placeholder="Longitude" required />
-                                <div class="invalid-feedback"> </div>
-
-                            </div> --}}
 
                             <div class="mb-3 col-lg-2 d-flex align-items-center mb-0">
                                 <button type="button" class="btn btn-info mt-4 btn-sm" id="viewMaps">
                                     <i class="ti ti-map-2 text-black"></i>
                                 </button>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <button class="btn btn-primary" id="lockLocationButton">Lock Location</button>
                             </div>
                         </div>
 
@@ -74,7 +99,6 @@
                             <textarea class="form-control" id="alamat" name="alamat" rows="2" required></textarea>
                             <div class="invalid-feedback"> </div>
                         </div>
-
                         <div class="row">
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -88,7 +112,7 @@
 
         <div class="col-md-7">
             <div class="card ">
-                <div class="m-1 leaflet-map" id="map"></div>
+                <div class="m-1 leaflet-map" style="height: 600px;" id="map"></div>
             </div>
         </div>
     </div>
@@ -96,6 +120,82 @@
 
     @push('script')
         <script>
+            async function fetchData() {
+                try {
+                    const response = await fetch('/get-location'); // Ganti dengan URL endpoint yang sesuai
+                    const data = await response.json();
+
+                    document.getElementById('latitude').value = data.latitude;
+                    document.getElementById('longitude').value = data.longitude;
+                    show_maps();
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                }
+            }
+
+            function startFetchingData() {
+                fetchDataInterval = setInterval(fetchData, 5000); // Fetch data setiap 5 detik
+            }
+
+            function stopFetchingData() {
+                clearInterval(fetchDataInterval); // Hentikan interval
+            }
+
+            document.getElementById("lockLocationButton").addEventListener("click", function(event) {
+                event.preventDefault();
+                stopFetchingData();
+            });
+
+            async function updateMode(data) {
+                try {
+                    const kodeSensor = document.getElementById('kode_sensor').value;
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    await fetch('/update-mode', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            apiKey: kodeSensor,
+                            mode: data
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    });
+                    if (data === "gps") {
+                        startFetchingData();
+                    }
+                } catch (error) {
+                    console.error('Error updating mode:', error);
+                }
+            }
+
+            function updateDatabaseAndSetMode(mode) {
+                if (mode === "manual") {
+                    updateMode("manual");
+                    stopFetchingData();
+                } else if (mode === "gps") {
+                    updateMode("gps");
+                }
+            }
+
+
+            function enableRadio() {
+                let kodeSensor = document.getElementById("kode_sensor").value;
+                let radios = document.querySelectorAll('input[name="mode"]');
+
+                if (kodeSensor.trim() !== "") {
+                    radios.forEach(function(radio) {
+                        radio.disabled = false;
+                        radio.checked = false;
+                    });
+                } else {
+                    radios.forEach(function(radio) {
+                        radio.disabled = true;
+                        radio.checked = false;
+                    });
+                }
+            }
+
             function handleValidationErrors(errors) {
                 if (errors && typeof errors === 'object') {
                     Object.keys(errors).forEach(fieldName => {
@@ -165,7 +265,7 @@
                 const longitude = longitudeInput.value;
                 const latitude = latitudeInput.value;
 
-                map = L.map('map').setView([latitude, longitude], 15);
+                map = L.map('map').setView([latitude, longitude], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
                 // var customIcon = L.divIcon({
@@ -193,11 +293,6 @@
                     latitudeInput.value = clickedLatitude;
 
                     marker.setLatLng([clickedLatitude, clickedLongitude]);
-
-                    // L.popup()
-                    //     .setLatLng([clickedLatitude, clickedLongitude])
-                    //     .setContent(kode)
-                    //     .openOn(map);
                 });
             }
 

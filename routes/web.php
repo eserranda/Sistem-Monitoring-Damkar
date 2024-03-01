@@ -11,6 +11,7 @@ use App\Http\Controllers\DataDamkarController;
 use App\Http\Controllers\DataSensorController;
 use App\Http\Controllers\MonitoringController;
 use Illuminate\Routing\Controllers\Middleware;
+use App\Http\Controllers\LocationTmpController;
 use App\Http\Controllers\SensorMonitoringController;
 
 /*
@@ -32,12 +33,18 @@ Route::get('/register', function () {
     return view('auth.register');
 });
 
+Route::controller(LocationTmpController::class)->group(function () {
+    Route::post('/update-mode', 'updateMode');
+    Route::get('/get-location', 'getLoc');
+});
+
 
 Route::controller(SensorMonitoringController::class)->group(function () {
-    Route::get('/monitoring', 'index')->name("monitoring.data");
+    Route::get('/monitoring', 'index')->name("monitoring.data")->middleware('auth');
     Route::get('/data_monitoring', 'data_monitoring')->name("data_monitoring.data");
     Route::POST('/reset_nilai_sensor', 'resetNilai')->name("reset.nilai_sensor")->middleware('auth');
     Route::POST('/reset_status_sensor', 'resetStatus')->name("reset.status_sensor")->middleware('auth');
+    Route::POST('/helper', 'helper')->name("helper")->middleware('auth');
 });
 
 Route::prefix('akun')->controller(UserController::class)->group(function () {
