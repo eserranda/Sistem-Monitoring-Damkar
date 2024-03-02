@@ -111,11 +111,9 @@ class SensorMonitoringController extends Controller
         if ($id_user == $nearestDamkarId) {
             return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $location, 'status_sensor' => $sensors], 200);
         } else {
-            $helperLocation = DataDamkar::where('helper', 1)->get(['latitude', 'longitude', 'nama']);
+            $helperLocation = DataDamkar::where('helper', 1)->where('id', $id_user)->get(['latitude', 'longitude', 'nama']);
 
             return response()->json(['data_sensor' => $dataSensor, 'damkar_location' => $helperLocation, 'status_sensor' => $sensors], 200);
-
-            // return response()->json(['status_sensor' => $location], 200);
         }
         // }
         // if (auth()->user()->id == $nearestDamkarId) {
