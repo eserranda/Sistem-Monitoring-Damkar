@@ -29,7 +29,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::controller(SensorMonitoringController::class)->group(function () {
     Route::post('/data', 'update')->name("sensor.update");
+    Route::post('/damkar-status', 'damkarStatus');
 });
+
+
 
 Route::controller(LocationTmpController::class)->group(function () {
     Route::post('/esp-mode', 'mode');

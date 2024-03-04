@@ -17,14 +17,14 @@
                 <h5 class="card-header">Tambah Data Sensor</h5>
                 <div class="card-body">
                     <form action="" method="POST" id="form_data_sensor" novalidate>
-                        {{-- <div class="mb-3">
+                        <div class="mb-3">
                             <label class="form-label" for="bs-validation-name">Kode Sensor</label>
                             <input type="text" class="form-control" id="kode_sensor" name="kode_sensor"
                                 placeholder="Kode Sensor" required oninput="enableRadio()" />
                             <div class="invalid-feedback"> </div>
-                        </div> --}}
+                        </div>
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <label class="form-label" for="form-repeater-1-3">Kode Sensor</label>
                             <select class="form-select" id="kode_sensor" name="kode_sensor" onchange="enableRadio()"
                                 required>
@@ -33,16 +33,16 @@
                                 <option value="Sensor02">Sensor02</option>
                             </select>
                             <div class="invalid-feedback"> </div>
-                        </div>
+                        </div> --}}
 
                         <div class="mb-3">
                             <div class="row row-bordered g-0">
 
-                                <div class="form-check">
+                                {{-- <div class="form-check">
                                     <input name="mode" class="form-check-input" type="radio" value="myLocation"
                                         id="defaultRadio3" disabled />
                                     <label class="form-check-label" for="defaultRadio2"> Lokasi Saat Ini </label>
-                                </div>
+                                </div> --}}
 
                                 <div class="form-check">
                                     <input name="mode" class="form-check-input" type="radio" value="gps"
@@ -71,16 +71,22 @@
                                     placeholder="Longitude" value=" 119.50185691687646" required />
                             </div>
 
-                            <div class="mb-3 col-lg-2 d-flex align-items-center mb-0">
-                                <button type="button" class="btn btn-info mt-4 btn-sm" id="viewMaps">
+                            <div class="mb-3 col-lg-2 style="display: none;" id="tombolViewMaps">
+
+                                <button type="button" class="btn btn-info mt-4 btn-sm" style="display: none;"
+                                    id="viewMaps">
                                     <i class="ti ti-map-2 text-black"></i>
                                 </button>
+
                             </div>
+
                         </div>
 
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <button class="btn btn-primary" id="lockLocationButton">Lock Location</button>
+                            <div class="col-12" style="display: none;" id="tombol">
+                                <button class="btn btn-primary" id="lockLocationButton">Lock
+                                    Location</button>
+
                             </div>
                         </div>
 
@@ -125,13 +131,19 @@
                     const response = await fetch('/get-location'); // Ganti dengan URL endpoint yang sesuai
                     const data = await response.json();
 
-                    document.getElementById('latitude').value = data.latitude;
-                    document.getElementById('longitude').value = data.longitude;
-                    show_maps();
+                    // Pengecekan apakah data tidak kosong
+                    if (Object.keys(data).length !== 0) {
+                        document.getElementById('latitude').value = data.latitude;
+                        document.getElementById('longitude').value = data.longitude;
+                        show_maps();
+                    } else {
+                        console.error('Data kosong.');
+                    }
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
             }
+
 
             function startFetchingData() {
                 fetchDataInterval = setInterval(fetchData, 5000); // Fetch data setiap 5 detik
@@ -173,7 +185,15 @@
                 if (mode === "manual") {
                     updateMode("manual");
                     stopFetchingData();
+                    document.getElementById('latitude').value = "-5.11038164480454";
+                    document.getElementById('longitude').value = " 119.50185691687646";
+                    document.getElementById('tombol').style.display = 'none';
+                    document.getElementById('tombolViewMaps').style.display = '';
                 } else if (mode === "gps") {
+                    document.getElementById('latitude').value = "";
+                    document.getElementById('longitude').value = "";
+                    document.getElementById('tombol').style.display = '';
+                    document.getElementById('tombolViewMaps').style.display = 'none';
                     updateMode("gps");
                 }
             }

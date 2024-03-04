@@ -6,10 +6,26 @@ use App\Models\DataDamkar;
 use App\Models\DataSensor;
 use Illuminate\Http\Request;
 use App\Models\SensorMonitoring;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class SensorMonitoringController extends Controller
 {
+
+    public function damkarStatus(Request $request)
+    {
+        $apiKey = $request->input('apiKey');
+        $getIdUser = User::where('username', $apiKey)->first();
+        $getIDDamakar = $getIdUser->id;
+
+
+        $getDataDamakar = DataDamkar::where('id_damkar', $getIDDamakar)->first();
+        $status = $getDataDamakar->status;
+
+        return response()->json($status, 200);
+    }
+
+
 
     public function damkarSelected($id)
     {
@@ -29,6 +45,7 @@ class SensorMonitoringController extends Controller
         $sensor = DataDamkar::where('id_damkar', '!=', $id)->where('status', 0)->get();
         return response()->json(['data' => $sensor], 200);
     }
+
 
 
     protected  function haversine($lat1, $lon1, $lat2, $lon2)

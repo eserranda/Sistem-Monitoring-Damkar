@@ -250,7 +250,7 @@
                         const key = Object.keys(keterangan)[0];
                         // const value = keterangan[key];
                         if (key === "sensor_api") {
-                            keterangan[key] = "Api Terdeteksi";
+                            keterangan[key] = "Terjadi Kebakaran";
                         } else if (key === "sensor_gas") {
                             keterangan[key] = "Gas Terdeteksi";
                         } else if (key === "sensor_asap") {
