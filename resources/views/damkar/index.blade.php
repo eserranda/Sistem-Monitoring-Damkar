@@ -35,11 +35,11 @@
                                 <td>{{ $row->nama }}</td>
                                 <td>{{ $row->latitude }}</td>
                                 <td>{{ $row->longitude }}</td>
-                                <td>{{ $row->alamat }}</td>
+                                <td>{{ $row->Opsi }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-icon btn-outline-secondary">
+                                    {{-- <button type="button" class="btn btn-icon btn-outline-secondary">
                                         <span class="ti ti-map-2 text-info"></span>
-                                    </button>
+                                    </button> --}}
                                     @if (Auth::check() && Auth::user()->role == 'super_admin')
                                         <a href="/edit_damkar/{{ $row->id }}"
                                             class="btn btn-icon btn-outline-secondary">

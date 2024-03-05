@@ -26,7 +26,7 @@
                             <th>Longitude</th>
                             <th>Tempat Sensor</th>
                             <th>Alamat</th>
-                            <th>Maps</th>
+                            <th>Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,9 +40,9 @@
                                 <td>{{ $row->alamat }}</td>
                                 {{-- <td><a href="{{ $row->maps }}" target="_blank">Maps</a></td> --}}
                                 <td>
-                                    <button type="button" class="btn btn-icon btn-outline-secondary">
+                                    {{-- <button type="button" class="btn btn-icon btn-outline-secondary">
                                         <span class="ti ti-map-2 text-info"></span>
-                                    </button>
+                                    </button> --}}
                                     @if (Auth::check() && Auth::user()->role == 'super_admin')
                                         <a href="/edit_sensor/{{ $row->id }}"
                                             class="btn btn-icon btn-outline-secondary">
