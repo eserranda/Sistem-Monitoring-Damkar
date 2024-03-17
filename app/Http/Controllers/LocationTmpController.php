@@ -11,9 +11,14 @@ class LocationTmpController extends Controller
     public function updateMode(Request $request)
     {
         $apiKey = $request->input('apiKey');
-        $mode = LocationTmp::where('apiKey', $apiKey)->update([
-            'mode' => $request->input('mode')
-        ]);
+        $mode = LocationTmp::where('apiKey', $apiKey)->updateOrCreate(
+            [
+                'apiKey' => $apiKey
+            ],
+            [
+                'mode' => $request->input('mode'),
+            ]
+        );
         return response()->json(["status" => "success", "message" => "Mode updated successfully", "data" => $mode]);
     }
 
