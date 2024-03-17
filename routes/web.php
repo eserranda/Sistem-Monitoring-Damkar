@@ -35,7 +35,7 @@ Route::get('/register', function () {
 
 Route::controller(LocationTmpController::class)->group(function () {
     Route::post('/update-mode', 'updateMode');
-    Route::get('/get-location', 'getLoc');
+    Route::post('/get-location', 'getLoc');
 });
 
 

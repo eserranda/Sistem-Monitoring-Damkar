@@ -24,7 +24,7 @@ class LocationTmpController extends Controller
 
     public function getLoc(Request $request)
     {
-        $apiKey = "Sensor01";
+        $apiKey =  $request->input('apiKey');
         $data = LocationTmp::where('apiKey', $apiKey)->first();
         return response()->json($data);
     }

@@ -128,7 +128,18 @@
         <script>
             async function fetchData() {
                 try {
-                    const response = await fetch('/get-location'); // Ganti dengan URL endpoint yang sesuai
+                    const kodeSensor = document.getElementById('kode_sensor').value;
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                    const response = await fetch('/get-location', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            apiKey: kodeSensor,
+                        }),
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    });
                     const data = await response.json();
 
                     // Pengecekan apakah data tidak kosong
