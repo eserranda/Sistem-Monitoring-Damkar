@@ -59,6 +59,17 @@ class DataSensorController extends Controller
     }
 
 
+    public function statusAllSensor()
+    {
+        $statusSensors = DataSensor::where('status', 1)->get();
+
+        if ($statusSensors->isEmpty()) {
+            return response()->json(['status' => false, 'message' => "Sensor Tidak mendeteksi kebakaran"], 200);
+        }
+
+
+        return response()->json(['status' => true, 'data' => $statusSensors], 200);
+    }
     /**
      * Show the form for editing the specified resource.
      */

@@ -61,6 +61,9 @@ Route::controller(DataSensorController::class)->group(function () {
     Route::get('/edit_sensor/{id}', 'show')->name("edit.show")->middleware('auth');
     Route::POST('/update_sensor', 'update')->name("sensor.update")->middleware('auth');
     Route::get('/sensor_locations', 'sensorLocations')->name("sensor_locations.data");
+
+    Route::get('/status_all_sensor', 'statusAllSensor');
+
     // Route::get('/status_sensors', 'statusSensors')->name("status_sensors.data");
     Route::POST('/sensor_store', 'store')->name("sensor.store")->middleware('auth');
     Route::delete('/sensor_delete/{id}', 'destroy')->name("sensor.delete")->middleware('auth');

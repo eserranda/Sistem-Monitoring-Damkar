@@ -67,10 +67,35 @@
 
     <audio id="alarm" src="{{ asset('assets') }}/audio/alarm.mp3"></audio>
 
+    <div class="col-12 my-3">
+        <h3 class="text-center  ">Sistem Monitoring Kebakaran <b>{{ Auth::user()->name }}</b></h3>
+    </div>
+
+
+    <div class="card">
+        <h5 class="card-header">Notifikasi Status Sensor</h5>
+        <div class="table-responsive" id="tableContainer" style="display: none">
+            <table class="table" id=notif_status_sensor>
+                <thead>
+                    <tr>
+                        <th>Sensor</th>
+                        <th>LATITUDE</th>
+                        <th>LONGITUDE</th>
+                        <th>ALAMAT</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody class="table-border-bottom-0">
+                    <tr>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
 
     <div class="col-12 my-3">
-        <h3 class="text-center  ">Sistem Monitoring Kebakaran <b>{{ Auth::user()->name }}</b></h3>
         <div class="card">
             <div class="leaflet-map" style="width: 100%; height: 500px;" id="sensorMaps"></div>
         </div>
@@ -107,6 +132,48 @@
     </button> --}}
     @push('script')
         <script>
+            function statusAllSensor() {
+                var tableContainer = document.getElementById('tableContainer');
+                fetch('/status_all_sensor', {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === false) {
+                            tableContainer.style.display = 'none';
+                            return;
+                        }
+
+                        tableContainer.style.display = 'block';
+
+                        populateTable(data.data);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            }
+
+            function populateTable(data) {
+                var tableBody = document.getElementById('notif_status_sensor').getElementsByTagName('tbody')[0];
+
+                tableBody.innerHTML = "";
+
+                data.forEach(function(sensor) {
+                    var row = tableBody.insertRow();
+                    row.insertCell(0).innerHTML = sensor.kode_sensor;
+                    row.insertCell(1).innerHTML = sensor.latitude;
+                    row.insertCell(2).innerHTML = sensor.longitude;
+                    row.insertCell(3).innerHTML = sensor.alamat;
+                    row.insertCell(4).innerHTML =
+                        `<span class="badge bg-label-danger me-1 blinking">Terjadi Kebakaran</span>`;
+                });
+            }
+
+            statusAllSensor();
+            setInterval(statusAllSensor, 5000);
+
+
+
             var alarm = document.getElementById("alarm");
 
             function stopAudio() {
@@ -230,7 +297,7 @@
                 fetch('/data_monitoring')
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
+                        // console.log(data);
                         // const damkarLatitude = data.damkar_location.latitude;
                         // const damkarLongitude = data.damkar_location.longitude;
                         // const namaDamkar = data.damkar_location.nama;
