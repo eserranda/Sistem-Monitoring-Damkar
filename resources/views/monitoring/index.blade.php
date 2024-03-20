@@ -456,15 +456,18 @@
                                         <button class="btn btn-success disabled" id="selesai">Selesai</button>
                                     </div>
                                 </div>
-                                <div class="row mt-3">
-                                    <div class="col-md-6">
-                                        <button class="btn btn-warning" id="help">Bantuan</button>
-                                    </div>
-                                </div>
+                               
+                                
+
                             </div>
                         </div>
                     `;
 
+                // <div class="row mt-3">
+                //     <div class="col-md-6">
+                //         <button class="btn btn-warning" id="help">Bantuan</button>
+                //     </div>
+                // </div>
                 $('#sensorMaps').prepend(sensorInfoContent);
 
                 var id = {{ Auth::user()->id }}

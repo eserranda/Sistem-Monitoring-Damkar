@@ -9,13 +9,27 @@
                     <div data-i18n="Dashboard">Dashboard</div>
                 </a>
             </li>
-            <li class="menu-item {{ Request::is('monitoring*') ? 'active show' : '' }}">
-                <a href="/monitoring" class="menu-link">
-                    {{-- <i class="menu-icon tf-icons ti ti-app-window"></i> --}}
-                    <i class="menu-icon tf-icons ti ti-screen-share"></i>
-                    <div data-i18n="Monitoring">Monitoring</div>
-                </a>
-            </li>
+
+            @if (Auth::check() && Auth::user()->role == 'poskoh_damkar')
+                <li class="menu-item {{ Request::is('monitoring*') ? 'active show' : '' }}">
+                    <a href="/monitoring" class="menu-link">
+                        {{-- <i class="menu-icon tf-icons ti ti-app-window"></i> --}}
+                        <i class="menu-icon tf-icons ti ti-screen-share"></i>
+                        <div data-i18n="Monitoring">Monitoring</div>
+                    </a>
+                </li>
+            @endif
+
+            @if (Auth::check() && Auth::user()->role == 'pemadam_kompi')
+                <li class="menu-item {{ Request::is('monitoring_kebakaran*') ? 'active show' : '' }}">
+                    <a href="/monitoring_kebakaran" class="menu-link">
+                        {{-- <i class="menu-icon tf-icons ti ti-app-window"></i> --}}
+                        <i class="menu-icon tf-icons ti ti-screen-share"></i>
+                        <div data-i18n="Monitoring Kebakaran">Monitoring Kebakaran</div>
+                    </a>
+                </li>
+            @endif
+
             <li class="menu-item {{ Request::is('sensor*', 'add_sensor') ? 'active show' : '' }}">
                 <a href="/sensor" class="menu-link">
                     <i class="menu-icon tf-icons ti ti-temperature"></i>

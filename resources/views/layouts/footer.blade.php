@@ -6,11 +6,10 @@
                 ©
                 <script>
                     document.write(new Date().getFullYear());
-                </script>
-                , made with ❤️ by Perinio
+                </script>, made with ❤️ by <b>Verin</b> | Universitas Kristen Indonesia Paulus
             </div>
             <div>
-                <a href="#" class="footer-link me-4" target="_blank">Sistem Monitoring Damkar</a>
+                <a href="#" class="footer-link me-4" target="_blank">Real-Time Sistem Monitoring Damkar</a>
             </div>
         </div>
     </div>

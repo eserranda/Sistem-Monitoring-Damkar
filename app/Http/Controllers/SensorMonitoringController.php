@@ -250,10 +250,14 @@ class SensorMonitoringController extends Controller
             $data = true;
         }
 
-        $sensorMonitoring->updateOrInsert(
+        $result = $sensorMonitoring->updateOrInsert(
             ['apiKey' => $apiKey],
             [$sensor => $data]
         );
+
+        if ($result) {
+            DataSensor::where('kode_sensor', $apiKey)->update(['status' => 1]);
+        }
 
         return response()->json(['success' => true, 'message' => 'Data updated'], 200);
     }

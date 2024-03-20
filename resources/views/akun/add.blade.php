@@ -32,7 +32,8 @@
                             <label class="form-label" for="form-repeater-1-3">Role</label>
                             <select class="form-select" id="role" name="role" required>
                                 <option value="" selected disabled>Pilih Role</option>
-                                <option value="super_admin">Super Admin</option>
+                                <option value="super_admin">Super Admin</option>s
+                                <option value="pemadam_kompi">Pemadam Kompi</option>
                                 <option value="poskoh_damkar">Poskoh Damkar</option>
                             </select>
                             <div class="invalid-feedback"> </div>

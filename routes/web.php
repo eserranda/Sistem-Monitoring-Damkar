@@ -12,6 +12,8 @@ use App\Http\Controllers\DataSensorController;
 use App\Http\Controllers\MonitoringController;
 use Illuminate\Routing\Controllers\Middleware;
 use App\Http\Controllers\LocationTmpController;
+use App\Http\Controllers\PemadamKompi;
+use App\Http\Controllers\PemadamKompiController;
 use App\Http\Controllers\SensorMonitoringController;
 
 /*
@@ -31,6 +33,13 @@ use App\Http\Controllers\SensorMonitoringController;
 // });
 Route::get('/register', function () {
     return view('auth.register');
+});
+
+Route::controller(PemadamKompiController::class)->group(function () {
+    Route::get('/monitoring_kebakaran', 'index')->name("sensor.index")->middleware('auth');
+    Route::get('/monitoring_kebakaran/sensor_locations', 'sensorLocations')->middleware('auth');
+    Route::get('/monitoring_kebakaran/data_damakrs', 'dataDamakrs')->middleware('auth');
+    Route::get('/monitoring_kebakaran/helper', 'helper')->name("helper")->middleware('auth');
 });
 
 Route::controller(LocationTmpController::class)->group(function () {
