@@ -190,74 +190,75 @@
                             `<span class="badge bg-label-danger me-1 blinking">Terjadi Kebakaran</span>`;
 
                         row.insertCell(3).innerHTML =
-                            `<button class="btn btn-warning" id="help">Minta Bantuan</button>`;
-                    });
+                            `<button class="btn btn-warning" id="help${sensor.id}">Minta Bantuan</button>`;
 
-
-                    $('#help').on('click', async function(event) {
-                        fetch('/monitoring_kebakaran/helper', {
-                                method: 'GET',
-                            })
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Gagal mengambil data siswa');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                console.log(data)
-                                $('#posko_damkar').empty();
-
-                                data.data.forEach(item => {
-                                    $('#posko_damkar').append(
-                                        `<option value="${item.id}">${item.nama}</option>`
-                                    );
-                                });
-
-                                $('#largeModal').modal('show');
-                                $('#send').on('click', async function() {
-                                    var selectedItemId = $('#posko_damkar').val();
-                                    if (selectedItemId) {
-                                        try {
-                                            const response = await fetch(
-                                                '/damkarSelected/' +
-                                                selectedItemId, {
-                                                    method: 'GET',
-                                                });
-
-                                            if (!response.ok) {
-                                                throw new Error(
-                                                    'Gagal mengambil data dengan ID yang dipilih'
-                                                );
-                                            }
-
-                                            const data = await response.json();
-                                            if (response.status) {
-                                                $('#largeModal').modal('hide');
-                                                Swal.fire(
-                                                    'Berhasil!',
-                                                    'Meminta bantuan berhasil.',
-                                                    'success'
-                                                );
-                                            } else {
-                                                Swal.fire(
-                                                    'Gagal!',
-                                                    'Terjadi kesalahan .',
-                                                    'error'
-                                                );
-                                            }
-
-                                        } catch (error) {
-                                            console.error('Error:', error);
-
-                                        }
-                                    } else {
-                                        alert("Silakan pilih posko terlebih dahulu.");
+                        $(`#help${sensor.id}`).on('click', async function(event) {
+                            fetch('/monitoring_kebakaran/helper', {
+                                    method: 'GET',
+                                })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Gagal mengambil data siswa');
                                     }
-                                });
-                            })
-                    })
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    console.log(data)
+                                    $('#posko_damkar').empty();
 
+                                    data.data.forEach(item => {
+                                        $('#posko_damkar').append(
+                                            `<option value="${item.id}">${item.nama}</option>`
+                                        );
+                                    });
+
+                                    $('#largeModal').modal('show');
+                                    $('#send').on('click', async function() {
+                                        var selectedItemId = $('#posko_damkar')
+                                            .val();
+                                        if (selectedItemId) {
+                                            try {
+                                                const response = await fetch(
+                                                    '/damkarSelected/' +
+                                                    selectedItemId, {
+                                                        method: 'GET',
+                                                    });
+
+                                                if (!response.ok) {
+                                                    throw new Error(
+                                                        'Gagal mengambil data dengan ID yang dipilih'
+                                                    );
+                                                }
+
+                                                const data = await response.json();
+                                                if (response.status) {
+                                                    $('#largeModal').modal('hide');
+                                                    Swal.fire(
+                                                        'Success',
+                                                        'Berhasil meminta bantuan',
+                                                        'success'
+                                                    );
+                                                } else {
+                                                    Swal.fire(
+                                                        'Gagal!',
+                                                        'Terjadi kesalahan .',
+                                                        'error'
+                                                    );
+                                                }
+
+                                            } catch (error) {
+                                                console.error('Error:', error);
+
+                                            }
+                                        } else {
+                                            alert(
+                                                "Silakan pilih posko terlebih dahulu."
+                                            );
+                                        }
+                                    });
+                                })
+                        })
+                    });
                 }
 
                 fetchAndDisplayMarkersSensor();
